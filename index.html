@@ -6,1100 +6,1206 @@
 <title>Spreken A2 — Oefenexamen</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --navy: #1e4272; --navy-light: #2a5a9e; --navy-dark: #142d50;
-  --red: #c0392b; --red-light: #e74c3c; --green: #27ae60; --amber: #e67e22;
-  --bg: #f4f6f9; --surface: #ffffff; --border: rgba(0,0,0,0.1);
-  --text: #1a1a2e; --text-muted: #5a6a7e;
-  --font: 'IBM Plex Sans', sans-serif; --mono: 'IBM Plex Mono', monospace;
-  --radius: 10px; --shadow: 0 2px 12px rgba(0,0,0,0.08);
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1e4272;--navy-light:#2a5a9e;--navy-dark:#142d50;
+  --orange:#e07b2a;--orange-light:#f08c3a;
+  --red:#c0392b;--red-light:#e74c3c;
+  --green:#27ae60;--amber:#e67e22;
+  --bg:#f0f2f5;--surface:#fff;--border:rgba(0,0,0,0.12);
+  --text:#1a1a2e;--text-muted:#5a6a7e;
+  --font:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
+  --radius:8px;--shadow:0 2px 8px rgba(0,0,0,0.1);
 }
-body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* HEADER */
-.app-header {
-  background: var(--navy); color: white; padding: 0 24px; height: 52px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-}
-.header-left { display: flex; align-items: center; gap: 10px; }
-.header-title { font-size: 15px; font-weight: 500; }
-.header-right { display: flex; align-items: center; gap: 10px; }
-.header-score { font-family: var(--mono); font-size: 13px; opacity: 0.85; }
-.btn-header {
-  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
-  color: white; padding: 5px 12px; border-radius: 6px; font-size: 12px;
-  font-family: var(--font); cursor: pointer;
-}
-.btn-header:hover { background: rgba(255,255,255,0.25); }
+/* ── HEADER ── */
+.hdr{background:var(--navy);color:#fff;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:100;}
+.hdr-left{display:flex;align-items:center;gap:10px;}
+.hdr-title{font-size:14px;font-weight:500;}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.hdr-score{font-family:var(--mono);font-size:13px;opacity:.85;}
+.hdr-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 10px;border-radius:5px;font-size:12px;font-family:var(--font);cursor:pointer;}
+.hdr-btn:hover{background:rgba(255,255,255,.25);}
 
-/* SCREENS */
-.screen { display: none; min-height: calc(100vh - 52px); }
-.screen.active { display: block; }
+/* Timer in header */
+.timer-wrap{display:flex;align-items:center;gap:6px;cursor:pointer;position:relative;}
+.timer-icon{opacity:.85;}
+.timer-display{font-family:var(--mono);font-size:12px;display:none;}
+.timer-display.visible{display:inline;}
+.timer-tooltip{position:absolute;top:32px;right:0;background:rgba(0,0,0,.85);color:#fff;font-size:12px;padding:5px 10px;border-radius:5px;white-space:nowrap;display:none;z-index:200;}
+.timer-wrap:hover .timer-tooltip{display:block;}
 
-/* LOGIN */
-.login-wrap {
-  display: flex; align-items: center; justify-content: center;
-  min-height: calc(100vh - 52px); padding: 24px;
-}
-.login-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 32px; width: 100%; max-width: 380px;
-  box-shadow: var(--shadow);
-}
-.login-card h2 { font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
-.login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
-.user-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.user-btn {
-  padding: 14px; border: 2px solid var(--border); border-radius: var(--radius);
-  background: var(--surface); font-family: var(--font); font-size: 14px; font-weight: 500;
-  cursor: pointer; color: var(--text); transition: all 0.15s;
-}
-.user-btn:hover { border-color: var(--navy); color: var(--navy); }
-.user-btn.selected { border-color: var(--navy); background: #eef2fa; color: var(--navy); }
-.field { margin-bottom: 14px; }
-.field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 500; }
-.field input {
-  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
-  font-family: var(--font); font-size: 14px; color: var(--text);
-  background: var(--bg); outline: none; transition: border-color 0.15s;
-}
-.field input:focus { border-color: var(--navy); }
-.error-msg { font-size: 13px; color: var(--red); margin-bottom: 12px; display: none; }
+/* ── SCREENS ── */
+.screen{display:none;min-height:calc(100vh - 48px);}
+.screen.active{display:block;}
 
-/* HOME */
-.home-wrap { max-width: 600px; margin: 0 auto; padding: 32px 16px; }
-.home-greeting { font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
-.home-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
-.verdict-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 16px 20px; margin-bottom: 24px; box-shadow: var(--shadow);
-  display: flex; align-items: center; gap: 16px;
-}
-.verdict-icon { font-size: 28px; }
-.verdict-text h3 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-.verdict-text p { font-size: 12px; color: var(--text-muted); }
-.mode-grid { display: grid; gap: 12px; margin-bottom: 24px; }
-.mode-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 18px 20px; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow);
-}
-.mode-card:hover { border-color: var(--navy); transform: translateY(-1px); }
-.mode-card h3 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
-.mode-card p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-.sub-select {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 16px; margin-bottom: 12px; display: none;
-}
-.sub-select p { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+/* ── LOGIN / SETUP ── */
+.center-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 48px);padding:24px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:100%;max-width:380px;box-shadow:var(--shadow);}
+.card h2{font-size:17px;font-weight:600;color:var(--navy);margin-bottom:5px;}
+.card p{font-size:13px;color:var(--text-muted);margin-bottom:20px;}
+.user-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.user-btn{padding:12px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;color:var(--text);transition:all .15s;}
+.user-btn:hover,.user-btn.sel{border-color:var(--navy);background:#eef2fa;color:var(--navy);}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:12px;color:var(--text-muted);margin-bottom:4px;font-weight:500;}
+.field input{width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:border-color .15s;}
+.field input:focus{border-color:var(--navy);}
+.err-msg{font-size:13px;color:var(--red);margin-bottom:10px;display:none;}
 
-/* EXAM */
-.exam-wrap { max-width: 780px; margin: 0 auto; padding: 20px 16px; }
-.question-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);
-}
-.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.part-badge {
-  font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-  color: white; background: var(--navy); padding: 3px 10px; border-radius: 20px;
-}
-.q-counter { font-size: 12px; color: var(--text-muted); font-family: var(--mono); }
-.q-context { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; font-style: italic; }
-.q-text { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
-.q-instruction { font-size: 13px; color: var(--text-muted); border-left: 3px solid var(--navy); padding-left: 10px; }
+/* ── HOME ── */
+.home-wrap{max-width:580px;margin:0 auto;padding:28px 16px;}
+.home-greeting{font-size:19px;font-weight:600;color:var(--navy);margin-bottom:3px;}
+.home-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px;}
+.verdict-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;}
+.verdict-icon{font-size:26px;}
+.verdict-text h3{font-size:14px;font-weight:600;margin-bottom:2px;}
+.verdict-text p{font-size:12px;color:var(--text-muted);}
+.mode-grid{display:grid;gap:10px;margin-bottom:20px;}
+.mode-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow);}
+.mode-card:hover{border-color:var(--navy);transform:translateY(-1px);}
+.mode-card h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px;}
+.mode-card p{font-size:12px;color:var(--text-muted);line-height:1.5;}
+.sub-sel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;display:none;}
+.sub-sel p{font-size:13px;font-weight:600;margin-bottom:8px;}
 
-.video-wrap { width: 100%; border-radius: 8px; overflow: hidden; background: #000; margin-bottom: 16px; display: none; }
-.video-wrap video { width: 100%; display: block; max-height: 320px; }
-.photos-wrap { display: flex; gap: 12px; margin-bottom: 16px; display: none; }
-.photos-wrap img { flex: 1; border-radius: 8px; object-fit: cover; height: 200px; border: 1px solid var(--border); }
-.photos-wrap.single img { height: 240px; }
-.photos-wrap.triple img { height: 160px; }
-.photo-placeholder {
-  flex: 1; border-radius: 8px; height: 200px; background: var(--bg);
-  border: 1px solid var(--border); display: flex; align-items: center;
-  justify-content: center; color: var(--text-muted); font-size: 13px;
-}
+/* ── EXAM ── */
+.exam-wrap{max-width:760px;margin:0 auto;padding:20px 16px 80px;}
 
-/* RECORDING */
-.recording-panel {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 16px;
-}
-.timer-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.rec-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccc; flex-shrink: 0; transition: background 0.2s; }
-.rec-dot.active { background: var(--red); animation: blink 1s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.timer-bar-wrap { flex: 1; height: 8px; background: #e8ecf2; border-radius: 4px; overflow: hidden; }
-.timer-bar { height: 100%; width: 0%; background: var(--navy); border-radius: 4px; transition: width 1s linear, background 0.3s; }
-.timer-bar.warning { background: var(--amber); }
-.timer-bar.danger { background: var(--red); }
-.timer-text { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text-muted); min-width: 48px; text-align: right; }
+/* Info screen */
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+.info-card .info-section{margin-bottom:20px;}
+.info-card .info-section:last-child{margin-bottom:0;}
+.info-section h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.info-section p{font-size:14px;color:var(--text-muted);line-height:1.6;}
+.info-divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
 
-.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-.btn {
-  padding: 10px 18px; border-radius: 6px; border: 1px solid var(--border);
-  background: var(--surface); font-family: var(--font); font-size: 13px; font-weight: 500;
-  cursor: pointer; color: var(--text); transition: background 0.15s, transform 0.1s; white-space: nowrap;
-}
-.btn:hover:not(:disabled) { background: var(--bg); }
-.btn:active:not(:disabled) { transform: scale(0.98); }
-.btn:disabled { opacity: 0.35; cursor: not-allowed; }
-.btn-primary { background: var(--navy); color: white; border-color: var(--navy); }
-.btn-primary:hover:not(:disabled) { background: var(--navy-light); }
-.btn-record { background: var(--red); color: white; border-color: var(--red); }
-.btn-record:hover:not(:disabled) { background: var(--red-light); }
-.btn-success { background: var(--green); color: white; border-color: var(--green); }
+/* Question card */
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:12px;}
 
-.status-box { background: var(--bg); border-radius: 6px; padding: 10px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5; min-height: 40px; }
-.status-box.success { color: var(--green); background: #eafaf1; }
-.status-box.error { color: var(--red); background: #fdecea; }
-.status-box.processing { color: var(--navy); background: #eef2fa; }
-.audio-wrap { margin-top: 12px; display: none; }
-.audio-wrap.visible { display: block; }
-.audio-wrap label { font-size: 11px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-audio { width: 100%; border-radius: 6px; }
+/* Video */
+.video-wrap{width:50%;border-radius:6px;overflow:hidden;background:#000;margin-bottom:14px;display:none;}
+.video-wrap video{width:100%;display:block;}
+.video-controls{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.vid-ctrl-btn{background:none;border:1px solid var(--border);border-radius:5px;padding:4px 8px;cursor:pointer;font-size:12px;color:var(--text-muted);}
+.vid-ctrl-btn:hover{background:var(--bg);}
 
-/* FEEDBACK */
-.feedback-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);
-}
-.feedback-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.feedback-title { font-size: 15px; font-weight: 600; color: var(--navy); }
-.feedback-total { font-family: var(--mono); font-size: 14px; font-weight: 500; }
-.feedback-total.pass { color: var(--green); }
-.feedback-total.fail { color: var(--red); }
-.score-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
-.score-table th { text-align: left; padding: 6px 10px; background: var(--bg); color: var(--text-muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
-.score-table td { padding: 8px 10px; border-top: 1px solid var(--border); vertical-align: top; line-height: 1.4; }
-.score-val { font-family: var(--mono); font-weight: 500; white-space: nowrap; }
-.score-val.good { color: var(--green); }
-.score-val.mid { color: var(--amber); }
-.score-val.bad { color: var(--red); }
-.feedback-section { margin-bottom: 12px; }
-.feedback-section h4 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 6px; }
-.feedback-section p { font-size: 13px; line-height: 1.6; }
-.feedback-section .en { color: var(--text); margin-bottom: 4px; }
-.feedback-section .nl { color: var(--text-muted); font-style: italic; }
+/* Photos */
+.photos-wrap{display:flex;gap:10px;margin-bottom:14px;display:none;}
+.photos-wrap img{flex:1;border-radius:6px;object-fit:cover;height:180px;border:1px solid var(--border);}
+.photos-wrap.single img{height:220px;}
+.photos-wrap.triple img{height:150px;}
+.photo-ph{flex:1;border-radius:6px;height:180px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:13px;}
 
-/* NAV */
-.nav-row { display: flex; gap: 10px; justify-content: space-between; margin-bottom: 16px; }
+.q-context{font-size:14px;color:var(--text-muted);margin-bottom:10px;font-style:italic;}
+.q-text{font-size:14px;font-weight:500;line-height:1.5;margin-bottom:6px;}
+.q-instruction{font-size:13px;color:var(--text-muted);}
+.q-instruction u{text-decoration:underline;}
 
-/* PROGRESS */
-.progress-wrap { max-width: 700px; margin: 0 auto; padding: 24px 16px; }
-.progress-wrap h2 { font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 16px; }
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
-.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-align: center; }
-.stat-card .val { font-size: 22px; font-weight: 600; color: var(--navy); font-family: var(--mono); }
-.stat-card .lbl { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-.section-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
-.crit-bar-wrap { margin-bottom: 8px; }
-.crit-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-.crit-bar-bg { background: #e8ecf2; border-radius: 4px; height: 8px; overflow: hidden; }
-.crit-bar-fill { height: 100%; border-radius: 4px; background: var(--navy); transition: width 0.4s; }
-.history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.history-table th { text-align: left; padding: 8px 10px; background: var(--bg); font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; }
-.history-table td { padding: 8px 10px; border-top: 1px solid var(--border); }
-.badge-pass { background: #eafaf1; color: var(--green); padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-.badge-fail { background: #fdecea; color: var(--red); padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+/* ── RECORDING BAR (DUO style) ── */
+.rec-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.rec-bar{background:var(--navy);border-radius:6px;padding:9px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;width:fit-content;min-width:280px;position:relative;}
+.rec-dot{width:18px;height:18px;border-radius:50%;background:var(--red);flex-shrink:0;}
+.rec-dot.recording{border-radius:3px;animation:pulse .8s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.rec-trash{background:none;border:none;cursor:pointer;font-size:14px;color:#fff;opacity:.85;flex-shrink:0;padding:0 2px;}
+.rec-trash:hover{opacity:1;}
+.rec-play-btn{background:none;border:none;cursor:pointer;font-size:12px;color:#fff;flex-shrink:0;padding:0 2px;}
+.rec-time{font-family:var(--mono);font-size:13px;color:#fff;min-width:40px;}
+.rec-total{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.65);flex-shrink:0;}
+.rec-prog-bg{flex:1;height:3px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden;min-width:80px;}
+.rec-prog-fill{height:100%;background:#fff;border-radius:2px;width:0%;transition:width 1s linear;}
+.rec-prog-fill.warn{background:var(--amber);}
+.rec-prog-fill.danger{background:var(--red);}
+.rec-tooltip{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--orange);color:#fff;font-size:11px;font-weight:600;padding:5px 10px;border-radius:5px;white-space:nowrap;pointer-events:none;display:none;}
+.rec-status{font-size:12px;color:var(--text-muted);margin-top:8px;}
 
-/* SUMMARY */
-.summary-wrap { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
-.summary-wrap h2 { font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
-.summary-wrap .sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+/* Delete confirm popup */
+.del-confirm{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--orange);color:#fff;border-radius:6px;padding:10px 14px;font-size:13px;display:none;z-index:50;min-width:240px;}
+.del-confirm-btns{display:flex;gap:8px;margin-top:8px;}
+.del-btn{padding:5px 12px;border-radius:4px;border:1px solid rgba(255,255,255,.5);font-size:12px;font-family:var(--font);cursor:pointer;font-weight:600;}
+.del-btn.cancel{background:rgba(255,255,255,.2);color:#fff;}
+.del-btn.confirm{background:#fff;color:var(--orange);}
 
-/* SPINNER */
-.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(30,66,114,0.2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 6px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+/* No-answer warning */
+.warn-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:300;display:none;align-items:center;justify-content:center;}
+.warn-overlay.open{display:flex;}
+.warn-box{background:#fff;border-radius:10px;padding:24px;max-width:380px;width:90%;text-align:center;}
+.warn-box h3{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text);}
+.warn-box p{font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;}
+.warn-btns{display:flex;gap:10px;justify-content:center;}
+
+/* ── FEEDBACK ── */
+.feedback-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:12px;display:none;}
+.fb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.fb-title{font-size:14px;font-weight:600;color:var(--navy);}
+.fb-total{font-family:var(--mono);font-size:13px;font-weight:500;}
+.fb-total.pass{color:var(--green);}
+.fb-total.fail{color:var(--red);}
+.score-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.score-tbl th{text-align:left;padding:5px 8px;background:var(--bg);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:500;}
+.score-tbl td{padding:7px 8px;border-top:1px solid var(--border);vertical-align:top;line-height:1.4;}
+.sv{font-family:var(--mono);font-weight:500;}
+.sv.g{color:var(--green);}
+.sv.m{color:var(--amber);}
+.sv.b{color:var(--red);}
+.fb-sec{margin-bottom:10px;}
+.fb-sec h4{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:5px;}
+.fb-sec .en{font-size:13px;line-height:1.5;color:var(--text);margin-bottom:3px;}
+.fb-sec .nl{font-size:13px;line-height:1.5;color:var(--text-muted);font-style:italic;}
+.divider{border:none;border-top:1px solid var(--border);margin:10px 0;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--navy-dark);padding:8px 16px;display:none;align-items:center;justify-content:space-between;z-index:100;}
+.bottom-nav.visible{display:flex;}
+.nav-btn{background:var(--orange);border:none;color:#fff;padding:8px 18px;border-radius:20px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.nav-btn:hover{background:var(--orange-light);}
+.nav-btn:disabled{opacity:.35;cursor:not-allowed;}
+.nav-center{display:flex;align-items:center;gap:12px;}
+.nav-icon-btn{background:none;border:none;color:rgba(255,255,255,.8);cursor:pointer;font-size:18px;padding:4px;border-radius:4px;}
+.nav-icon-btn:hover{color:#fff;background:rgba(255,255,255,.1);}
+.nav-icon-btn.bookmarked{color:var(--orange);}
+.q-badge{background:var(--orange);color:#fff;border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;font-family:var(--mono);}
+
+/* ── OVERZICHT MODAL ── */
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal-box{background:#fff;border-radius:10px;padding:22px;width:90%;max-width:520px;max-height:80vh;overflow-y:auto;}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.modal-hdr h3{font-size:15px;font-weight:600;color:var(--text);}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-muted);padding:2px;}
+.ov-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.ov-btn{width:42px;height:42px;border-radius:6px;border:1px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--bg);color:var(--text);position:relative;}
+.ov-btn:hover{border-color:var(--navy);}
+.ov-btn.ov-info{background:var(--navy);color:#fff;border-color:var(--navy);}
+.ov-btn.ov-current{background:var(--orange);color:#fff;border-color:var(--orange);}
+.ov-btn.ov-answered{background:var(--navy);color:#fff;border-color:var(--navy);}
+.ov-btn.ov-scoring{background:#e8ecf2;color:var(--navy);}
+.ov-btn.ov-bookmarked::after{content:'▲';font-size:8px;position:absolute;top:2px;right:3px;color:var(--orange);}
+.ov-btn.ov-current.ov-bookmarked::after{color:#fff;}
+.ov-legend{display:flex;gap:14px;flex-wrap:wrap;}
+.ov-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted);}
+.ov-swatch{width:14px;height:14px;border-radius:3px;}
+.swatch-curr{background:var(--orange);}
+.swatch-ans{background:var(--navy);}
+.swatch-unan{background:var(--bg);border:1px solid var(--border);}
+.swatch-bm{background:var(--orange);position:relative;}
+
+/* ── PROGRESS ── */
+.prog-wrap{max-width:680px;margin:0 auto;padding:24px 16px;}
+.prog-wrap h2{font-size:17px;font-weight:600;color:var(--navy);margin-bottom:14px;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;text-align:center;}
+.stat-card .val{font-size:20px;font-weight:600;color:var(--navy);font-family:var(--mono);}
+.stat-card .lbl{font-size:11px;color:var(--text-muted);margin-top:3px;}
+.sec-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;}
+.crit-bar-wrap{margin-bottom:7px;}
+.crit-bar-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:3px;}
+.crit-bar-bg{background:#e8ecf2;border-radius:3px;height:7px;overflow:hidden;}
+.crit-bar-fill{height:100%;border-radius:3px;background:var(--navy);transition:width .4s;}
+.hist-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.hist-tbl th{text-align:left;padding:7px 9px;background:var(--bg);font-size:10px;font-weight:500;color:var(--text-muted);text-transform:uppercase;}
+.hist-tbl td{padding:7px 9px;border-top:1px solid var(--border);}
+.badge-pass{background:#eafaf1;color:var(--green);padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge-fail{background:#fdecea;color:var(--red);padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600;}
+
+/* ── SUMMARY ── */
+.summ-wrap{max-width:620px;margin:0 auto;padding:24px 16px;}
+.summ-wrap h2{font-size:19px;font-weight:600;color:var(--navy);margin-bottom:3px;}
+.summ-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px;}
+
+/* ── BUTTONS ── */
+.btn{padding:9px 16px;border-radius:6px;border:1px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;color:var(--text);transition:background .15s,transform .1s;white-space:nowrap;}
+.btn:hover:not(:disabled){background:var(--bg);}
+.btn:active:not(:disabled){transform:scale(.98);}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+.btn-primary:hover:not(:disabled){background:var(--navy-light);}
+.btn-success{background:var(--green);color:#fff;border-color:var(--green);}
+
+/* ── SPINNER / STATUS ── */
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(30,66,114,.2);border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:5px;}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<header class="app-header">
-  <div class="header-left">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-left">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <circle cx="12" cy="12" r="10"/><path d="M12 6v6.5l3 2" stroke-linecap="round"/>
     </svg>
-    <div class="header-title">Spreken A2 Oefenexamen</div>
+    <span class="hdr-title">Spreken A2 Oefenexamen</span>
   </div>
-  <div class="header-right">
-    <span class="header-score" id="headerScore" style="display:none;"></span>
-    <button class="btn-header" id="btnProgress" onclick="showProgress()" style="display:none;">📊 Voortgang</button>
-    <button class="btn-header" id="btnLogout" onclick="logout()" style="display:none;">Uitloggen</button>
+  <div class="hdr-right">
+    <span class="hdr-score" id="hdrScore" style="display:none"></span>
+    <div class="timer-wrap" id="timerWrap" style="display:none" onclick="toggleTimerDisplay()">
+      <svg class="timer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/><path d="M12 6v6.5l3 2" stroke-linecap="round"/>
+      </svg>
+      <span class="timer-display" id="timerDisplay"></span>
+      <div class="timer-tooltip" id="timerTooltip"></div>
+    </div>
+    <button class="hdr-btn" id="btnProg" onclick="showProgress()" style="display:none">📊 Voortgang</button>
+    <button class="hdr-btn" id="btnLogout" onclick="logout()" style="display:none">Uitloggen</button>
   </div>
 </header>
 
 <!-- LOGIN -->
-<div class="screen active" id="screenLogin">
-  <div class="login-wrap">
-    <div class="login-card">
+<div class="screen active" id="scrLogin">
+  <div class="center-wrap">
+    <div class="card">
       <h2>Welkom</h2>
-      <p>Kies uw naam en voer uw wachtwoord in om te beginnen.</p>
+      <p>Kies uw naam en voer uw wachtwoord in.</p>
       <div class="user-btns">
-        <button class="user-btn" id="btnMarshall" onclick="selectUser('Marshall')">Marshall</button>
-        <button class="user-btn" id="btnSuna" onclick="selectUser('Suna')">Suna</button>
+        <button class="user-btn" id="btnMarshall" onclick="selUser('Marshall')">Marshall</button>
+        <button class="user-btn" id="btnSuna" onclick="selUser('Suna')">Suna</button>
       </div>
-      <div class="field">
-        <label>Wachtwoord</label>
-        <input type="password" id="passwordInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+      <div class="field"><label>Wachtwoord</label>
+        <input type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
       </div>
-      <div class="error-msg" id="loginError">Verkeerd wachtwoord. Probeer opnieuw.</div>
-      <button class="btn btn-primary" style="width:100%;" onclick="login()">Inloggen</button>
+      <div class="err-msg" id="loginErr"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="login()">Inloggen</button>
+    </div>
+  </div>
+</div>
+
+<!-- API SETUP -->
+<div class="screen" id="scrApiSetup">
+  <div class="center-wrap">
+    <div class="card">
+      <h2>API sleutel instellen</h2>
+      <p>Welkom, <strong id="setupUser"></strong>! Eerste keer op dit apparaat. Voer uw Anthropic API-sleutel in — wordt versleuteld opgeslagen, hoeft slechts eenmalig.</p>
+      <div class="field"><label>Anthropic API-sleutel</label>
+        <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" onkeydown="if(event.key==='Enter')saveKey()">
+      </div>
+      <div class="err-msg" id="setupErr">Ongeldige sleutel. Moet beginnen met "sk-ant-".</div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveKey()">Sleutel opslaan en beginnen</button>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:10px;line-height:1.5">Uw sleutel wordt versleuteld met uw wachtwoord als sleutel.</p>
     </div>
   </div>
 </div>
 
 <!-- HOME -->
-<div class="screen" id="screenHome">
+<div class="screen" id="scrHome">
   <div class="home-wrap">
-    <div class="home-greeting" id="homeGreeting">Goedemiddag!</div>
+    <div class="home-greeting" id="homeGreet"></div>
     <div class="home-sub" id="homeSub"></div>
     <div class="verdict-card">
-      <div class="verdict-icon" id="verdictIcon">🔴</div>
-      <div class="verdict-text">
-        <h3 id="verdictTitle">Nog niet klaar / Not yet ready</h3>
-        <p id="verdictDesc">Eerste sessie — nog geen geschiedenis.</p>
-      </div>
+      <div class="verdict-icon" id="vIcon">🔴</div>
+      <div class="verdict-text"><h3 id="vTitle">Nog niet klaar / Not yet ready</h3><p id="vDesc">Eerste sessie.</p></div>
     </div>
     <div class="mode-grid">
-      <div class="mode-card" onclick="startMode('full')">
-        <h3>Volledig examen</h3>
-        <p>Alle 16 vragen over 4 delen. Volledige examensimulatie van 35 minuten.</p>
-      </div>
-      <div class="mode-card" onclick="showPartSelect()">
-        <h3>Gericht oefenen</h3>
-        <p>Kies één of meer delen om op te focussen. Minimaal 4 vragen.</p>
-      </div>
-      <div class="mode-card" onclick="showCriterionSelect()">
-        <h3>Criterium drill</h3>
-        <p>Focus op één zwak criterium: grammatica, woordenschat, coherentie, en meer.</p>
-      </div>
+      <div class="mode-card" onclick="startMode('full')"><h3>Volledig examen</h3><p>Alle 16 vragen over 4 onderdelen. Volledige examensimulatie van 35 minuten.</p></div>
+      <div class="mode-card" onclick="showPartSel()"><h3>Gericht oefenen</h3><p>Kies één of meer onderdelen. Minimaal 4 vragen.</p></div>
+      <div class="mode-card" onclick="showCritSel()"><h3>Criterium drill</h3><p>Focus op één zwak criterium: grammatica, woordenschat, coherentie, en meer.</p></div>
     </div>
-    <div class="sub-select" id="partSelectWrap">
-      <p>Kies deel(en):</p>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-        <button class="btn" id="pDeel1" onclick="togglePart(1)">Deel 1</button>
-        <button class="btn" id="pDeel2" onclick="togglePart(2)">Deel 2</button>
-        <button class="btn" id="pDeel3" onclick="togglePart(3)">Deel 3</button>
-        <button class="btn" id="pDeel4" onclick="togglePart(4)">Deel 4</button>
+    <div class="sub-sel" id="partSel">
+      <p>Kies onderdeel(en):</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="btn" id="pd1" onclick="togPart(1)">Onderdeel 1</button>
+        <button class="btn" id="pd2" onclick="togPart(2)">Onderdeel 2</button>
+        <button class="btn" id="pd3" onclick="togPart(3)">Onderdeel 3</button>
+        <button class="btn" id="pd4" onclick="togPart(4)">Onderdeel 4</button>
       </div>
       <button class="btn btn-primary" onclick="startTargeted()">Start gericht oefenen</button>
     </div>
-    <div class="sub-select" id="criterionSelectWrap">
+    <div class="sub-sel" id="critSel">
       <p>Kies criterium:</p>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-        <button class="btn" onclick="startCriterionDrill('adequaatheid')">Adequaatheid</button>
-        <button class="btn" onclick="startCriterionDrill('woordenschat')">Woordenschat</button>
-        <button class="btn" onclick="startCriterionDrill('grammatica')">Grammatica</button>
-        <button class="btn" onclick="startCriterionDrill('vloeiendheid')">Vloeiendheid</button>
-        <button class="btn" onclick="startCriterionDrill('coherentie')">Coherentie</button>
-        <button class="btn" onclick="startCriterionDrill('uitspraak')">Uitspraak</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="btn" onclick="startDrill('adequaatheid')">Adequaatheid</button>
+        <button class="btn" onclick="startDrill('woordenschat')">Woordenschat</button>
+        <button class="btn" onclick="startDrill('grammatica')">Grammatica</button>
+        <button class="btn" onclick="startDrill('vloeiendheid')">Vloeiendheid</button>
+        <button class="btn" onclick="startDrill('coherentie')">Coherentie</button>
+        <button class="btn" onclick="startDrill('uitspraak')">Uitspraak</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- EXAM -->
-<div class="screen" id="screenExam">
+<div class="screen" id="scrExam">
   <div class="exam-wrap">
-    <div class="question-card">
-      <div class="q-meta">
-        <span class="part-badge" id="examPartBadge">Deel 1</span>
-        <span class="q-counter" id="examQCounter">Vraag 1 van 16</span>
+    <!-- Info screen -->
+    <div class="info-card" id="infoCard" style="display:none">
+      <div class="info-section" id="infoEnd" style="display:none">
+        <h3 id="infoEndTitle"></h3>
+        <p id="infoEndText"></p>
       </div>
-      <div class="q-context" id="examContext"></div>
-      <div class="video-wrap" id="videoWrap">
-        <video id="examVideo" controls>
-          <source id="examVideoSrc" src="" type="video/mp4">
-        </video>
+      <hr class="info-divider" id="infoDivider" style="display:none">
+      <div class="info-section">
+        <h3 id="infoStartTitle"></h3>
+        <p id="infoStartText"></p>
       </div>
-      <div class="photos-wrap" id="photosWrap"></div>
-      <div class="q-text" id="examQText"></div>
-      <div class="q-instruction" id="examInstruction"></div>
     </div>
 
-    <div class="recording-panel">
-      <div class="timer-row">
-        <div class="rec-dot" id="recDot"></div>
-        <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar"></div></div>
-        <div class="timer-text" id="timerText">00:00</div>
+    <!-- Question card -->
+    <div class="q-card" id="qCard" style="display:none">
+      <div class="video-wrap" id="vidWrap">
+        <video id="examVid" controls><source id="vidSrc" src="" type="video/mp4"></video>
       </div>
-      <div class="btn-row">
-        <button class="btn btn-record" id="btnStart" onclick="startRecording()">▶ Start opname</button>
-        <button class="btn" id="btnStop" onclick="stopRecording()" disabled>◼ Stop opname</button>
-      </div>
-      <div class="audio-wrap" id="audioWrap">
-        <label>Uw opname</label>
-        <audio id="audioPlayer" controls></audio>
-      </div>
-      <div class="btn-row" id="reviewBtnRow" style="display:none;">
-        <button class="btn" onclick="reRecord()">↺ Opnieuw opnemen</button>
-        <button class="btn btn-success" onclick="submitAnswer()">✓ Antwoord indienen</button>
-      </div>
-      <div class="status-box" id="statusBox">Bekijk de vraag en druk op <strong>Start opname</strong> als u klaar bent.</div>
+      <div class="photos-wrap" id="photoWrap"></div>
+      <div class="q-context" id="qContext"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-instruction" id="qInstr"></div>
     </div>
 
-    <div class="feedback-card" id="feedbackCard" style="display:none;"></div>
-
-    <div class="nav-row">
-      <button class="btn" id="btnPrev" onclick="prevQuestion()" disabled>← Vorige vraag</button>
-      <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()">Volgende vraag →</button>
+    <!-- Recording panel -->
+    <div class="rec-panel" id="recPanel" style="display:none">
+      <div style="position:relative;display:inline-block">
+        <div class="rec-bar" id="recBar" onclick="handleRecBarClick()">
+          <div class="rec-dot" id="recDot"></div>
+          <button class="rec-trash" id="recTrash" onclick="event.stopPropagation();showDelConfirm()" style="display:none" title="Opname verwijderen">🗑</button>
+          <button class="rec-play-btn" id="recPlayBtn" onclick="event.stopPropagation();togglePlayback()" style="display:none">▶</button>
+          <span class="rec-time" id="recTime">00:00</span>
+          <div class="rec-prog-bg"><div class="rec-prog-fill" id="recFill"></div></div>
+          <span class="rec-total" id="recTotalDisp">01:00</span>
+          <div class="rec-tooltip" id="recTip">Start opname</div>
+        </div>
+        <!-- Delete confirm -->
+        <div class="del-confirm" id="delConfirm">
+          Weet je zeker dat je de opname wilt verwijderen?
+          <div class="del-confirm-btns">
+            <button class="del-btn cancel" onclick="hideDelConfirm()">ANNULEREN</button>
+            <button class="del-btn confirm" onclick="deleteRecording()">VERWIJDEREN</button>
+          </div>
+        </div>
+      </div>
+      <div class="rec-status" id="recStatus">Druk op de rode knop om te beginnen met opnemen.</div>
     </div>
+
+    <!-- Feedback -->
+    <div class="feedback-card" id="fbCard"></div>
   </div>
+
+  <!-- Bottom nav -->
+  <nav class="bottom-nav visible" id="bottomNav">
+    <button class="nav-btn" id="btnVorige" onclick="goVorige()" disabled>&#8249; VORIGE</button>
+    <div class="nav-center">
+      <button class="nav-icon-btn" onclick="showOverzicht()" title="Overzicht">⊞</button>
+      <button class="nav-icon-btn" id="btnBookmark" onclick="toggleBookmark()" title="Bladwijzer">🔖</button>
+      <span class="q-badge" id="qBadge">1/16</span>
+    </div>
+    <button class="nav-btn" id="btnVolgende" onclick="goVolgende()">VOLGENDE &#8250;</button>
+  </nav>
 </div>
 
 <!-- PROGRESS -->
-<div class="screen" id="screenProgress">
-  <div class="progress-wrap">
-    <h2 id="progressTitle">Voortgang</h2>
-    <div class="stat-grid" id="progressStats"></div>
-    <div style="margin-bottom:24px;">
-      <div class="section-title">Gemiddelde per criterium</div>
-      <div id="criterionBars"></div>
+<div class="screen" id="scrProgress">
+  <div class="prog-wrap">
+    <h2 id="progTitle">Voortgang</h2>
+    <div class="stat-grid" id="progStats"></div>
+    <div style="margin-bottom:20px"><div class="sec-title">Gemiddelde per criterium</div><div id="critBars"></div></div>
+    <div style="margin-bottom:20px"><div class="sec-title">Sessiegeschiedenis</div>
+      <table class="hist-tbl"><thead><tr><th>Datum</th><th>Modus</th><th>Score</th><th>Resultaat</th></tr></thead>
+      <tbody id="histBody"></tbody></table>
     </div>
-    <div style="margin-bottom:24px;">
-      <div class="section-title">Sessiegeschiedenis</div>
-      <table class="history-table">
-        <thead><tr><th>Datum</th><th>Modus</th><th>Score</th><th>Resultaat</th></tr></thead>
-        <tbody id="historyBody"></tbody>
-      </table>
-    </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="downloadProgress()">Download voortgangsrapport</button>
-      <button class="btn" onclick="backFromProgress()">← Terug</button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="dlProgress()">Download rapport</button>
+      <button class="btn" onclick="backFromProg()">← Terug</button>
     </div>
   </div>
 </div>
 
 <!-- SUMMARY -->
-<div class="screen" id="screenSummary">
-  <div class="summary-wrap">
+<div class="screen" id="scrSummary">
+  <div class="summ-wrap">
     <h2>Sessie voltooid</h2>
-    <div class="sub" id="summarySubtitle"></div>
-    <div id="summaryContent"></div>
-    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="summ-sub" id="summSub"></div>
+    <div id="summContent"></div>
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn btn-primary" onclick="goHome()">Terug naar home</button>
-      <button class="btn" onclick="downloadProgress()">Download rapport</button>
+      <button class="btn" onclick="dlProgress()">Download rapport</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERZICHT MODAL -->
+<div class="modal-bg" id="ovModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3>Overzicht examen</h3><button class="modal-close" onclick="hideOverzicht()">✕</button></div>
+    <div class="ov-grid" id="ovGrid"></div>
+    <div class="ov-legend">
+      <div class="ov-legend-item"><div class="ov-swatch swatch-curr"></div>Geselecteerd</div>
+      <div class="ov-legend-item"><div class="ov-swatch swatch-unan"></div>Onbeantwoord</div>
+      <div class="ov-legend-item"><div class="ov-swatch swatch-ans"></div>Beantwoord</div>
+      <div class="ov-legend-item"><div class="ov-swatch swatch-bm"></div>Bladwijzers</div>
+    </div>
+  </div>
+</div>
+
+<!-- NO-ANSWER WARNING -->
+<div class="warn-overlay" id="warnOverlay">
+  <div class="warn-box">
+    <h3>Geen antwoord ingesproken</h3>
+    <p>U heeft nog geen antwoord ingesproken voor deze vraag. Weet u zeker dat u door wilt gaan?</p>
+    <div class="warn-btns">
+      <button class="btn" onclick="closeWarn()">Annuleren</button>
+      <button class="btn btn-primary" onclick="confirmSkip()">Ja, doorgaan</button>
     </div>
   </div>
 </div>
 
 <script>
-// ── CONSTANTS ─────────────────────────────────────────
-const PASSWORD_HASH = 'c2ea025a511224ac6bd874503f496f9d5e431bc7d4ecc95faeab703a1294cb43';
-const USERS = { Marshall: {}, Suna: {} };
+// ══════════ CONSTANTS ══════════
+const PW_HASH = 'c2ea025a511224ac6bd874503f496f9d5e431bc7d4ecc95faeab703a1294cb43';
 const UNSPLASH_KEY = '151IOPyzRgpP6fE6Gw678PShkGgEnhzRfWcVN-CGCzk';
-const ANTHROPIC_MODEL = 'claude-sonnet-4-20250514';
-const GITHUB_QUESTIONS_JSON = 'https://raw.githubusercontent.com/mvanbeurden/spreken-a2-tutor/main/videos/questions.json';
-const GITHUB_VIDEO_BASE = 'https://raw.githubusercontent.com/mvanbeurden/spreken-a2-tutor/main/videos/';
-const PARTS = [
-  { id:1, label:'Deel 1', type:'video',  count:4, instruction:'Beantwoord de vraag van de persoon in de video.' },
-  { id:2, label:'Deel 2', type:'photo1', count:4, instruction:'Gebruik het plaatje.' },
-  { id:3, label:'Deel 3', type:'photo2', count:4, instruction:'Kies één van de plaatjes.' },
-  { id:4, label:'Deel 4', type:'photo3', count:4, instruction:'Gebruik alle plaatjes.' },
-];
+const MODEL = 'claude-sonnet-4-20250514';
+const Q_JSON = 'https://raw.githubusercontent.com/mvanbeurden/spreken-a2-tutor/main/videos/questions.json';
+const VID_BASE = 'https://raw.githubusercontent.com/mvanbeurden/spreken-a2-tutor/main/videos/';
 const CRITERIA = ['adequaatheid','woordenschat','grammatica','vloeiendheid','coherentie','uitspraak'];
-const MAX_PER_Q = 12;
-const PASS_PER_Q = 7.2;
-const MAX_SECS = 60;
-const UNSPLASH_TOPICS = [
-  'Dutch everyday life','European workplace office','school classroom Netherlands',
-  'supermarket shopping Netherlands','public transport bus train Netherlands',
-  'home interior living room','park outdoor Netherlands','cafe coffee shop'
-];
+const MAX_Q = 12; const PASS_Q = 7.2; const MAX_SECS = 60;
+const DEEL_INFO = {
+  1:{title:'Onderdeel 1 - vragen met een video',desc:"U gaat naar vier video's kijken. Een man of vrouw vraagt iets in elke video. U moet antwoord geven."},
+  2:{title:'Onderdeel 2 - vragen met 1 plaatje',desc:'U ziet vier vragen met één plaatje. Geef antwoord op de vragen. Gebruik steeds het plaatje.'},
+  3:{title:'Onderdeel 3 - vragen met 2 plaatjes',desc:'U ziet vier vragen met twee plaatjes. Geef antwoord op de vragen. U kiest steeds één plaatje.'},
+  4:{title:'Onderdeel 4 - vragen met 3 plaatjes',desc:'U ziet vier vragen met drie plaatjes. Geef antwoord op de vragen. Gebruik steeds alle plaatjes.'}
+};
+const UNSPLASH_TOPICS = ['Dutch everyday life','European workplace office','school classroom Netherlands','supermarket shopping Netherlands','public transport Netherlands','home interior living room','park outdoor Netherlands','cafe coffee shop'];
 
-// ── STATE ─────────────────────────────────────────────
-let currentUser = null, currentApiKey = null, currentPassword = null;
-let sessionMode = 'full', sessionParts = [1,2,3,4], sessionFocusCriterion = null;
-let questions = [], currentQIdx = 0, answers = [];
-let stream = null, recorder = null, audioChunks = [], audioBlob = null;
-let timerInterval = null, elapsed = 0;
-let videoQuestions = [], selectedParts = [], previousScreen = 'screenHome';
+// ══════════ STATE ══════════
+let cUser=null,cApiKey=null,cPw=null;
+let sessionMode='full',sessionParts=[1,2,3,4],focusCrit=null;
+let examScreens=[]; // [{type:'info'|'question', deel, qIdx?}]
+let curScreenIdx=0;
+let qData=[]; // question data per question index (0-15)
+let recStates=[]; // recording state per question {state,blob,url,duration,elapsed,transcript,scores,total}
+let bookmarks=new Set(); // screen indices
+let stream=null,recorder=null,chunks=[],recTimer=null,recElapsed=0;
+let playAudio=null;
+let examTimerSecs=0,examTimerInterval=null,timerVisible=false;
+let prevScreen='scrHome';
+let selParts=[];
+let pendingSkip=false;
+let vidQs=[];
 
-// ── AUTH ──────────────────────────────────────────────
-function selectUser(name) {
-  currentUser = name;
-  document.getElementById('btnMarshall').classList.toggle('selected', name === 'Marshall');
-  document.getElementById('btnSuna').classList.toggle('selected', name === 'Suna');
+// ══════════ AUTH ══════════
+function selUser(n){
+  cUser=n;
+  document.getElementById('btnMarshall').classList.toggle('sel',n==='Marshall');
+  document.getElementById('btnSuna').classList.toggle('sel',n==='Suna');
 }
 
-async function login() {
-  if (!currentUser) { showErr('Kies eerst uw naam.'); return; }
-  const pw = document.getElementById('passwordInput').value;
-  if (!pw) { showErr('Voer uw wachtwoord in.'); return; }
-  const hash = await sha256(pw);
-  if (hash !== PASSWORD_HASH) { showErr('Verkeerd wachtwoord. Probeer opnieuw.'); return; }
-  document.getElementById('loginError').style.display = 'none';
-
-  // Try to load encrypted API key from localStorage
-  const stored = localStorage.getItem(currentUser.toLowerCase() + '_apikey');
-  if (stored) {
-    try {
-      currentApiKey = await decryptKey(stored, pw);
-    } catch(e) {
-      // Decryption failed — key may be corrupted, ask user to re-enter
-      currentApiKey = null;
-    }
+async function login(){
+  if(!cUser){showErr('loginErr','Kies eerst uw naam.');return;}
+  const pw=document.getElementById('pwInput').value;
+  if(!pw){showErr('loginErr','Voer uw wachtwoord in.');return;}
+  const h=await sha256(pw);
+  if(h!==PW_HASH){showErr('loginErr','Verkeerd wachtwoord. Probeer opnieuw.');return;}
+  document.getElementById('loginErr').style.display='none';
+  const stored=localStorage.getItem(cUser.toLowerCase()+'_key');
+  if(stored){
+    try{cApiKey=await decryptKey(stored,pw);}catch(e){cApiKey=null;}
   }
-
-  if (!currentApiKey) {
-    // No key stored yet (or decryption failed) — show first-time setup
-    currentPassword = pw;
-    showScreen('screenApiSetup');
-    document.getElementById('apiSetupUser').textContent = currentUser;
+  if(!cApiKey){
+    cPw=pw;
+    document.getElementById('setupUser').textContent=cUser;
+    showScreen('scrApiSetup');
     return;
   }
+  onLoggedIn();
+}
 
-  document.getElementById('btnProgress').style.display = 'inline-block';
-  document.getElementById('btnLogout').style.display = 'inline-block';
+async function saveKey(){
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(!k.startsWith('sk-ant-')){document.getElementById('setupErr').style.display='block';return;}
+  document.getElementById('setupErr').style.display='none';
+  const enc=await encryptKey(k,cPw);
+  localStorage.setItem(cUser.toLowerCase()+'_key',enc);
+  cApiKey=k; cPw=null;
+  onLoggedIn();
+}
+
+function onLoggedIn(){
+  document.getElementById('btnProg').style.display='inline-block';
+  document.getElementById('btnLogout').style.display='inline-block';
   showHome();
 }
 
-async function saveApiKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key.startsWith('sk-ant-')) { document.getElementById('apiSetupError').style.display='block'; return; }
-  document.getElementById('apiSetupError').style.display = 'none';
-  const encrypted = await encryptKey(key, currentPassword);
-  localStorage.setItem(currentUser.toLowerCase() + '_apikey', encrypted);
-  currentApiKey = key;
-  currentPassword = null;
-  document.getElementById('btnProgress').style.display = 'inline-block';
-  document.getElementById('btnLogout').style.display = 'inline-block';
-  showHome();
+function logout(){
+  cUser=null;cApiKey=null;cPw=null;
+  stopExamTimer();stopRecCleanup();
+  document.getElementById('btnProg').style.display='none';
+  document.getElementById('btnLogout').style.display='none';
+  document.getElementById('hdrScore').style.display='none';
+  document.getElementById('timerWrap').style.display='none';
+  document.getElementById('pwInput').value='';
+  document.getElementById('apiKeyInput').value='';
+  document.getElementById('btnMarshall').classList.remove('sel');
+  document.getElementById('btnSuna').classList.remove('sel');
+  document.getElementById('bottomNav').classList.remove('visible');
+  showScreen('scrLogin');
 }
 
-function showErr(msg) {
-  const el = document.getElementById('loginError');
-  el.textContent = msg; el.style.display = 'block';
+// ══════════ CRYPTO ══════════
+async function sha256(s){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
 }
-
-function logout() {
-  currentUser = null; currentApiKey = null; currentPassword = null;
-  document.getElementById('btnProgress').style.display = 'none';
-  document.getElementById('btnLogout').style.display = 'none';
-  document.getElementById('headerScore').style.display = 'none';
-  document.getElementById('passwordInput').value = '';
-  document.getElementById('apiKeyInput').value = '';
-  document.getElementById('btnMarshall').classList.remove('selected');
-  document.getElementById('btnSuna').classList.remove('selected');
-  showScreen('screenLogin');
+async function deriveKey(pw,salt){
+  const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
 }
-
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+async function encryptKey(api,pw){
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const k=await deriveKey(pw,salt);
+  const enc=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,new TextEncoder().encode(api));
+  const c=new Uint8Array(16+12+enc.byteLength);
+  c.set(salt,0);c.set(iv,16);c.set(new Uint8Array(enc),28);
+  return btoa(String.fromCharCode(...c));
 }
-
-async function deriveKey(password, salt) {
-  const keyMaterial = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
-    keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
-  );
-}
-
-async function encryptKey(apiKey, password) {
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const key = await deriveKey(password, salt);
-  const enc = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(apiKey));
-  // Pack salt + iv + ciphertext into base64
-  const combined = new Uint8Array(salt.length + iv.length + enc.byteLength);
-  combined.set(salt, 0); combined.set(iv, 16); combined.set(new Uint8Array(enc), 28);
-  return btoa(String.fromCharCode(...combined));
-}
-
-async function decryptKey(stored, password) {
-  const combined = new Uint8Array(atob(stored).split('').map(c => c.charCodeAt(0)));
-  const salt = combined.slice(0, 16);
-  const iv = combined.slice(16, 28);
-  const ciphertext = combined.slice(28);
-  const key = await deriveKey(password, salt);
-  const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
+async function decryptKey(stored,pw){
+  const c=new Uint8Array(atob(stored).split('').map(x=>x.charCodeAt(0)));
+  const k=await deriveKey(pw,c.slice(0,16));
+  const dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:c.slice(16,28)},k,c.slice(28));
   return new TextDecoder().decode(dec);
 }
 
-// ── NAVIGATION ────────────────────────────────────────
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+// ══════════ NAVIGATION ══════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  document.getElementById('bottomNav').classList.toggle('visible', id==='scrExam');
 }
+function showHome(){prevScreen='scrHome';loadHome();showScreen('scrHome');}
+function goHome(){stopRecCleanup();stopExamTimer();showHome();}
+function showProgress(){prevScreen=document.querySelector('.screen.active')?.id||'scrHome';renderProgress();showScreen('scrProgress');}
+function backFromProg(){showScreen(prevScreen);}
+function showErr(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block';}
 
-function showHome() {
-  previousScreen = 'screenHome';
-  loadHomeData();
-  showScreen('screenHome');
-}
-
-function goHome() {
-  stopAll();
-  showHome();
-}
-
-function showProgress() {
-  previousScreen = document.querySelector('.screen.active')?.id || 'screenHome';
-  renderProgress();
-  showScreen('screenProgress');
-}
-
-function backFromProgress() { showScreen(previousScreen); }
-
-// ── HOME ──────────────────────────────────────────────
-function loadHomeData() {
-  const h = new Date().getHours();
-  document.getElementById('homeGreeting').textContent =
-    (h<12?'Goedemorgen':h<18?'Goedemiddag':'Goedenavond') + ', ' + currentUser + '!';
-  const prog = loadProgress();
-  if (prog.sessions.length) {
-    const last = prog.sessions[prog.sessions.length-1];
-    document.getElementById('homeSub').textContent = `Laatste sessie: ${last.date} — ${last.totalScore}/${last.maxScore} punten`;
-    const avg = avgScore(prog);
-    let icon, title, desc;
-    if (avg >= 115.2/192) { icon='🟢'; title='Klaar voor het examen / Ready'; desc='Uw gemiddelde is boven de slagingsgrens.'; }
-    else if (avg >= 80/192) { icon='🟡'; title='Op weg / Approaching'; desc='U maakt goede voortgang richting de slagingsgrens.'; }
-    else { icon='🔴'; title='Nog niet klaar / Not yet ready'; desc='Blijf oefenen — elke sessie telt!'; }
-    document.getElementById('verdictIcon').textContent = icon;
-    document.getElementById('verdictTitle').textContent = title;
-    document.getElementById('verdictDesc').textContent = desc;
+// ══════════ HOME ══════════
+function loadHome(){
+  const h=new Date().getHours();
+  document.getElementById('homeGreet').textContent=(h<12?'Goedemorgen':h<18?'Goedemiddag':'Goedenavond')+', '+cUser+'!';
+  const p=loadProgress();
+  if(p.sessions.length){
+    const l=p.sessions[p.sessions.length-1];
+    document.getElementById('homeSub').textContent=`Laatste sessie: ${l.date} — ${l.totalScore}/${l.maxScore} punten`;
+    const avg=avgScore(p);
+    let ic,ti,de;
+    if(avg>=115.2/192){ic='🟢';ti='Klaar voor het examen / Ready';de='Uw gemiddelde is boven de slagingsgrens.';}
+    else if(avg>=80/192){ic='🟡';ti='Op weg / Approaching';de='U maakt goede voortgang.';}
+    else{ic='🔴';ti='Nog niet klaar / Not yet ready';de='Blijf oefenen — elke sessie telt!';}
+    document.getElementById('vIcon').textContent=ic;
+    document.getElementById('vTitle').textContent=ti;
+    document.getElementById('vDesc').textContent=de;
   } else {
-    document.getElementById('homeSub').textContent = 'Eerste sessie — nog geen geschiedenis.';
+    document.getElementById('homeSub').textContent='Eerste sessie — nog geen geschiedenis.';
   }
-  document.getElementById('partSelectWrap').style.display = 'none';
-  document.getElementById('criterionSelectWrap').style.display = 'none';
+  document.getElementById('partSel').style.display='none';
+  document.getElementById('critSel').style.display='none';
 }
 
-function avgScore(prog) {
-  if (!prog.sessions.length) return 0;
-  const r = prog.sessions.slice(-5);
-  return r.reduce((s,x) => s + x.totalScore/x.maxScore, 0) / r.length;
+function avgScore(p){
+  if(!p.sessions.length)return 0;
+  const r=p.sessions.slice(-5);
+  return r.reduce((s,x)=>s+x.totalScore/x.maxScore,0)/r.length;
 }
 
-function showPartSelect() {
-  selectedParts = [];
-  [1,2,3,4].forEach(i => document.getElementById('pDeel'+i).classList.remove('btn-primary'));
-  document.getElementById('partSelectWrap').style.display = 'block';
-  document.getElementById('criterionSelectWrap').style.display = 'none';
+function showPartSel(){selParts=[];[1,2,3,4].forEach(i=>document.getElementById('pd'+i).classList.remove('btn-primary'));document.getElementById('partSel').style.display='block';document.getElementById('critSel').style.display='none';}
+function showCritSel(){document.getElementById('critSel').style.display='block';document.getElementById('partSel').style.display='none';}
+function togPart(n){const i=selParts.indexOf(n);if(i===-1)selParts.push(n);else selParts.splice(i,1);document.getElementById('pd'+n).classList.toggle('btn-primary',selParts.includes(n));}
+function startTargeted(){if(!selParts.length){alert('Kies minimaal één onderdeel.');return;}sessionParts=[...selParts].sort();beginSession('targeted');}
+function startDrill(c){focusCrit=c;sessionParts=[1,2,3,4];beginSession('criterion');}
+function startMode(m){sessionMode=m;sessionParts=[1,2,3,4];focusCrit=null;beginSession(m);}
+
+// ══════════ SESSION START ══════════
+async function beginSession(mode){
+  sessionMode=mode;
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});}
+  catch(e){alert('Microfoon toegang geweigerd: '+e.message);return;}
+  try{const r=await fetch(Q_JSON);vidQs=await r.json();}
+  catch(e){vidQs=[{filename:'deel1_001.mp4',context:'Ik maak graag huiswerk op mijn slaapkamer.',question:'Waar maakt u graag huiswerk?',followup:'Vertel ook waarom.'}];}
+  buildExamScreens();
+  recStates=new Array(16).fill(null).map(()=>({state:'idle',blob:null,url:null,duration:0,elapsed:0,transcript:null,scores:null,total:null}));
+  bookmarks=new Set();
+  curScreenIdx=0;
+  // Set timer: 35 min for full 16q, proportional otherwise
+  const qCount=examScreens.filter(s=>s.type==='question').length;
+  examTimerSecs=Math.round((qCount/16)*35*60);
+  startExamTimer();
+  updateHdrScore();
+  document.getElementById('timerWrap').style.display='flex';
+  showScreen('scrExam');
+  renderCurrentScreen();
 }
 
-function showCriterionSelect() {
-  document.getElementById('criterionSelectWrap').style.display = 'block';
-  document.getElementById('partSelectWrap').style.display = 'none';
-}
-
-function togglePart(n) {
-  const i = selectedParts.indexOf(n);
-  if (i===-1) selectedParts.push(n); else selectedParts.splice(i,1);
-  document.getElementById('pDeel'+n).classList.toggle('btn-primary', selectedParts.includes(n));
-}
-
-function startTargeted() {
-  if (!selectedParts.length) { alert('Kies minimaal één deel.'); return; }
-  sessionParts = [...selectedParts].sort();
-  beginSession('targeted');
-}
-
-function startCriterionDrill(criterion) {
-  sessionFocusCriterion = criterion;
-  sessionParts = [1,2,3,4];
-  beginSession('criterion');
-}
-
-// ── SESSION START ─────────────────────────────────────
-async function startMode(mode) {
-  sessionMode = mode;
-  sessionFocusCriterion = null;
-  sessionParts = [1,2,3,4];
-  beginSession(mode);
-}
-
-async function beginSession(mode) {
-  sessionMode = mode;
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-  } catch(e) {
-    alert('Microfoon toegang geweigerd: ' + e.message + '\n\nGeef microfoontoestemming in uw browser en probeer opnieuw.');
-    return;
-  }
-  try {
-    const r = await fetch(GITHUB_QUESTIONS_JSON);
-    videoQuestions = await r.json();
-  } catch(e) {
-    videoQuestions = [{
-      filename: 'deel1_001.mp4',
-      context: 'Ik maak graag huiswerk op mijn slaapkamer.',
-      question: 'Waar maakt u graag huiswerk?',
-      followup: 'Vertel ook waarom.'
-    }];
-  }
-  buildQuestionList();
-  currentQIdx = 0;
-  answers = new Array(questions.length).fill(null);
-  updateHeaderScore();
-  showScreen('screenExam');
-  loadQuestion(0);
-}
-
-function buildQuestionList() {
-  questions = [];
-  const used = [];
-  for (const pid of sessionParts) {
-    const part = PARTS[pid-1];
-    for (let i = 0; i < part.count; i++) {
-      if (part.type === 'video') {
-        const vq = pickVideo(used);
-        used.push(vq?.filename);
-        questions.push({ part: pid, type: 'video', videoQ: vq, photos: null, questionText: null });
+function buildExamScreens(){
+  examScreens=[];
+  const usedVids=[];
+  for(const pd of sessionParts){
+    examScreens.push({type:'info',deel:pd});
+    for(let i=0;i<4;i++){
+      const qIdx=examScreens.filter(s=>s.type==='question').length;
+      if(pd===1){
+        const vq=pickVid(usedVids);
+        usedVids.push(vq?.filename);
+        examScreens.push({type:'question',deel:pd,qIdx,videoQ:vq,photos:null,questionText:null});
       } else {
-        questions.push({ part: pid, type: part.type, videoQ: null, photos: null, questionText: null });
+        examScreens.push({type:'question',deel:pd,qIdx,videoQ:null,photos:null,questionText:null});
       }
     }
   }
 }
 
-function pickVideo(used) {
-  const avail = videoQuestions.filter(v => !used.includes(v.filename));
-  const pool = avail.length ? avail : videoQuestions;
-  return pool[Math.floor(Math.random() * pool.length)];
+function pickVid(used){
+  const av=vidQs.filter(v=>!used.includes(v.filename));
+  const pool=av.length?av:vidQs;
+  return pool[Math.floor(Math.random()*pool.length)];
 }
 
-// ── QUESTION LOADING ──────────────────────────────────
-async function loadQuestion(idx) {
-  currentQIdx = idx;
-  const q = questions[idx];
-  const part = PARTS[q.part-1];
-  const partQ = questions.slice(0,idx).filter(x => x.part===q.part).length + 1;
-
-  document.getElementById('examPartBadge').textContent = part.label;
-  document.getElementById('examQCounter').textContent =
-    `Vraag ${idx+1} van ${questions.length} (${part.label} · ${partQ} van ${part.count})`;
-  document.getElementById('examInstruction').textContent = part.instruction;
-  document.getElementById('btnPrev').disabled = idx === 0;
-  document.getElementById('btnNext').textContent = idx === questions.length-1 ? 'Sessie afronden' : 'Volgende vraag →';
-
-  document.getElementById('videoWrap').style.display = 'none';
-  document.getElementById('photosWrap').style.display = 'none';
-  document.getElementById('feedbackCard').style.display = 'none';
-  resetRecordingUI();
-
-  if (q.type === 'video') await loadVideoQ(q);
-  else await loadPhotoQ(q);
-
-  if (answers[idx]) renderFeedback(idx);
-}
-
-async function loadVideoQ(q) {
-  const vq = q.videoQ;
-  if (!vq) { setStatus('Geen video beschikbaar.','error'); return; }
-  document.getElementById('examContext').textContent = vq.context;
-  document.getElementById('examQText').textContent = vq.question + ' ' + vq.followup;
-  document.getElementById('examVideoSrc').src = GITHUB_VIDEO_BASE + vq.filename;
-  document.getElementById('examVideo').load();
-  document.getElementById('videoWrap').style.display = 'block';
-  document.getElementById('examVideo').play().catch(()=>{});
-}
-
-async function loadPhotoQ(q) {
-  document.getElementById('examContext').textContent = '';
-  document.getElementById('examQText').textContent = 'Vraag wordt geladen...';
-  const count = q.type==='photo1'?1:q.type==='photo2'?2:3;
-  const wrap = document.getElementById('photosWrap');
-  wrap.className = 'photos-wrap' + (count===1?' single':count===3?' triple':'');
-  wrap.style.display = 'flex';
-  wrap.innerHTML = '';
-  for (let i=0;i<count;i++) {
-    const ph = document.createElement('div');
-    ph.className = 'photo-placeholder';
-    ph.innerHTML = '<span class="spinner"></span>';
-    wrap.appendChild(ph);
-  }
-
-  if (!q.photos) {
-    const topic = UNSPLASH_TOPICS[Math.floor(Math.random()*UNSPLASH_TOPICS.length)];
-    const urls = [];
-    for (let i=0;i<count;i++) {
-      try {
-        const r = await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(topic)}&orientation=landscape&client_id=${UNSPLASH_KEY}`);
-        const d = await r.json();
-        urls.push(d.urls?.regular||'');
-      } catch(e) { urls.push(''); }
+// ══════════ EXAM TIMER ══════════
+function startExamTimer(){
+  stopExamTimer();
+  examTimerInterval=setInterval(()=>{
+    examTimerSecs--;
+    updateTimerDisplay();
+    if(examTimerSecs<=0){
+      stopExamTimer();
+      playBeep(330,0.4);
+      alert('De tijd is voorbij. Uw sessie wordt afgerond.');
+      endSession();
     }
-    q.photos = urls;
-
-    const partDesc = q.type==='photo1'?'Deel 2 (1 foto)':q.type==='photo2'?'Deel 3 (2 fotos, kies er één)':'Deel 4 (3 fotos, vertel over elk)';
-    const focusNote = sessionFocusCriterion ? `\nThis is a criterion drill focused on: ${sessionFocusCriterion}. Design the question to naturally elicit that skill.` : '';
-    const prompt = `Generate a Dutch A2 inburgering Spreken exam question for ${partDesc}.
-The photo(s) show: "${topic}" in an everyday Dutch/European context.${focusNote}
-
-Return ONLY valid JSON:
-{"context":"short Dutch context sentence","question":"twofold Dutch question","followup":"short Dutch follow-up instruction"}
-
-Rules: A2 vocabulary, answerable in 1 minute, realistic everyday situation.
-For Deel 3: ask candidate to choose one photo and explain why.
-For Deel 4: ask candidate to say something about each photo.`;
-
-    try {
-      const resp = await callAnthropic([{role:'user',content:prompt}], 300);
-      const raw = resp.content?.[0]?.text||'{}';
-      q.questionText = JSON.parse(raw.replace(/```json|```/g,'').trim());
-    } catch(e) {
-      q.questionText = { context:'', question:'Vertel wat u op de foto ziet.', followup:'Vertel ook wat u daarvan vindt.' };
-    }
-  }
-
-  wrap.innerHTML = '';
-  q.photos.forEach(url => {
-    const img = document.createElement('img');
-    img.src = url; img.alt = 'Examenfoto';
-    wrap.appendChild(img);
-  });
-
-  if (q.questionText) {
-    document.getElementById('examContext').textContent = q.questionText.context||'';
-    document.getElementById('examQText').textContent = (q.questionText.question||'') + ' ' + (q.questionText.followup||'');
-  }
-}
-
-// ── RECORDING ─────────────────────────────────────────
-function resetRecordingUI() {
-  clearInterval(timerInterval); elapsed = 0; audioBlob = null; audioChunks = [];
-  document.getElementById('recDot').classList.remove('active');
-  document.getElementById('timerBar').style.width='0%';
-  document.getElementById('timerBar').className='timer-bar';
-  document.getElementById('timerText').textContent='00:00';
-  document.getElementById('btnStart').disabled=false;
-  document.getElementById('btnStop').disabled=true;
-  document.getElementById('reviewBtnRow').style.display='none';
-  document.getElementById('audioWrap').classList.remove('visible');
-  setStatus('Bekijk de vraag en druk op <strong>Start opname</strong> als u klaar bent.','');
-}
-
-function startRecording() {
-  audioChunks=[]; audioBlob=null;
-  playBeep(880,0.15);
-  recorder = new MediaRecorder(stream);
-  recorder.ondataavailable = e => { if(e.data.size>0) audioChunks.push(e.data); };
-  recorder.onstop = onStop;
-  recorder.start();
-  elapsed=0;
-  document.getElementById('recDot').classList.add('active');
-  document.getElementById('btnStart').disabled=true;
-  document.getElementById('btnStop').disabled=false;
-  document.getElementById('reviewBtnRow').style.display='none';
-  document.getElementById('audioWrap').classList.remove('visible');
-  setStatus('Aan het opnemen... Spreek nu uw antwoord in.','');
-  timerInterval = setInterval(()=>{
-    elapsed++;
-    const pct = (elapsed/MAX_SECS)*100;
-    const bar = document.getElementById('timerBar');
-    bar.style.width = Math.min(pct,100)+'%';
-    bar.className = 'timer-bar'+(pct>=100?' danger':pct>=80?' warning':'');
-    const m=Math.floor(elapsed/60),s=elapsed%60;
-    document.getElementById('timerText').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    if(elapsed>=MAX_SECS) stopRecording();
   },1000);
+  updateTimerDisplay();
 }
 
-function stopRecording() {
-  clearInterval(timerInterval);
+function stopExamTimer(){clearInterval(examTimerInterval);examTimerInterval=null;}
+
+function updateTimerDisplay(){
+  const m=Math.floor(examTimerSecs/60);
+  const s=examTimerSecs%60;
+  const txt=`${m} min ${s<10?'0':''}${s}s`;
+  document.getElementById('timerTooltip').textContent=txt+' resterend';
+  if(timerVisible)document.getElementById('timerDisplay').textContent=m+' min';
+}
+
+function toggleTimerDisplay(){
+  timerVisible=!timerVisible;
+  document.getElementById('timerDisplay').classList.toggle('visible',timerVisible);
+}
+
+// ══════════ SCREEN RENDERING ══════════
+function renderCurrentScreen(){
+  const sc=examScreens[curScreenIdx];
+  updateNav();
+  updateOvBadge();
+
+  if(sc.type==='info'){
+    renderInfoScreen(sc);
+  } else {
+    renderQuestionScreen(sc);
+  }
+}
+
+function renderInfoScreen(sc){
+  document.getElementById('infoCard').style.display='block';
+  document.getElementById('qCard').style.display='none';
+  document.getElementById('recPanel').style.display='none';
+  document.getElementById('fbCard').style.display='none';
+
+  const prevDeel=sc.deel>1?sc.deel-1:null;
+  document.getElementById('infoEnd').style.display=prevDeel?'block':'none';
+  document.getElementById('infoDivider').style.display=prevDeel?'block':'none';
+  if(prevDeel){
+    document.getElementById('infoEndTitle').textContent='Einde onderdeel '+prevDeel;
+    document.getElementById('infoEndText').textContent='U bent klaar met onderdeel '+prevDeel+'. Wilt u nog terug naar de vragen? Klik dan op de nummers van de vragen.';
+  }
+  document.getElementById('infoStartTitle').textContent=DEEL_INFO[sc.deel].title;
+  document.getElementById('infoStartText').textContent=DEEL_INFO[sc.deel].desc;
+}
+
+async function renderQuestionScreen(sc){
+  document.getElementById('infoCard').style.display='none';
+  document.getElementById('qCard').style.display='block';
+  document.getElementById('recPanel').style.display='block';
+
+  const qIdx=sc.qIdx;
+  const rs=recStates[qIdx];
+
+  // Video vs photos
+  document.getElementById('vidWrap').style.display='none';
+  document.getElementById('photoWrap').style.display='none';
+
+  if(sc.deel===1){
+    await loadVideoQ(sc,qIdx);
+  } else {
+    await loadPhotoQ(sc,qIdx);
+  }
+
+  // Restore recording state
+  renderRecBar(qIdx);
+
+  // Show feedback if scored
+  const fb=document.getElementById('fbCard');
+  if(rs.scores){renderFeedback(qIdx);fb.style.display='block';}
+  else if(rs.state==='scoring'){fb.style.display='block';fb.innerHTML='<div style="font-size:13px;color:var(--text-muted)"><span class="spinner"></span>Antwoord wordt beoordeeld...</div>';}
+  else{fb.style.display='none';}
+}
+
+async function loadVideoQ(sc,qIdx){
+  const vq=sc.videoQ;
+  if(!vq){return;}
+  document.getElementById('qContext').textContent=vq.context;
+  document.getElementById('qText').textContent=vq.question+' '+vq.followup;
+  document.getElementById('qInstr').textContent='Beantwoord de vraag van de persoon in de video.';
+  document.getElementById('vidSrc').src=VID_BASE+vq.filename;
+  document.getElementById('examVid').load();
+  document.getElementById('vidWrap').style.display='block';
+  document.getElementById('examVid').play().catch(()=>{});
+}
+
+async function loadPhotoQ(sc,qIdx){
+  document.getElementById('qContext').textContent='';
+  document.getElementById('qText').textContent='Vraag wordt geladen...';
+  const count=sc.deel===2?1:sc.deel===3?2:3;
+  const pw=document.getElementById('photoWrap');
+  pw.className='photos-wrap'+(count===1?' single':count===3?' triple':'');
+  pw.style.display='flex';
+  pw.innerHTML='';
+  for(let i=0;i<count;i++){const p=document.createElement('div');p.className='photo-ph';p.innerHTML='<span class="spinner"></span>';pw.appendChild(p);}
+
+  if(!sc.photos){
+    const top=UNSPLASH_TOPICS[Math.floor(Math.random()*UNSPLASH_TOPICS.length)];
+    const urls=[];
+    for(let i=0;i<count;i++){
+      try{const r=await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(top)}&orientation=landscape&client_id=${UNSPLASH_KEY}`);const d=await r.json();urls.push(d.urls?.regular||'');}
+      catch(e){urls.push('');}
+    }
+    sc.photos=urls;
+    const pd=sc.deel===2?'Deel 2 (1 foto)':sc.deel===3?'Deel 3 (2 fotos, kies er één)':'Deel 4 (3 fotos, vertel over elk)';
+    const fn=focusCrit?`\nCriterion drill focus: ${focusCrit}.`:'';
+    const pr=`Generate a Dutch A2 inburgering Spreken exam question for ${pd}. Photos show: "${top}" in Dutch/European context.${fn}\nReturn ONLY JSON: {"context":"...","question":"...","followup":"..."}`;
+    try{
+      const rr=await callAPI([{role:'user',content:pr}],300);
+      sc.questionText=JSON.parse((rr.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
+    }catch(e){sc.questionText={context:'',question:'Vertel wat u op de foto ziet.',followup:'Vertel ook wat u daarvan vindt.'};}
+  }
+
+  pw.innerHTML='';
+  sc.photos.forEach(u=>{const img=document.createElement('img');img.src=u;img.alt='Examenfoto';pw.appendChild(img);});
+  if(sc.questionText){
+    document.getElementById('qContext').textContent=sc.questionText.context||'';
+    document.getElementById('qText').textContent=(sc.questionText.question||'')+' '+(sc.questionText.followup||'');
+  }
+  const instrs=['','Gebruik het plaatje.','Kies <u>één</u> van de plaatjes.','Gebruik alle plaatjes.'];
+  document.getElementById('qInstr').innerHTML=instrs[sc.deel]||'';
+}
+
+// ══════════ RECORDING BAR ══════════
+function renderRecBar(qIdx){
+  const rs=recStates[qIdx];
+  const dot=document.getElementById('recDot');
+  const trash=document.getElementById('recTrash');
+  const playBtn=document.getElementById('recPlayBtn');
+  const timeEl=document.getElementById('recTime');
+  const fill=document.getElementById('recFill');
+  const total=document.getElementById('recTotalDisp');
+  const tip=document.getElementById('recTip');
+  const status=document.getElementById('recStatus');
+
+  // Reset
+  dot.style.display='block';
+  dot.className='rec-dot';
+  trash.style.display='none';
+  playBtn.style.display='none';
+  fill.className='rec-prog-fill';
+  fill.style.width='0%';
+  hideDelConfirm();
+
+  if(rs.state==='idle'){
+    timeEl.textContent='00:00';
+    total.textContent='01:00';
+    tip.textContent='Start opname';
+    status.textContent='Druk op de rode knop om te beginnen met opnemen.';
+  } else if(rs.state==='recording'){
+    dot.classList.add('recording');
+    const pct=(rs.elapsed/MAX_SECS)*100;
+    fill.style.width=Math.min(pct,100)+'%';
+    if(pct>=80)fill.classList.add(pct>=100?'danger':'warn');
+    timeEl.textContent=fmtTime(rs.elapsed);
+    total.textContent='01:00';
+    tip.textContent='Opname stoppen';
+    status.textContent='Aan het opnemen...';
+  } else if(rs.state==='recorded'){
+    dot.style.display='none';
+    trash.style.display='inline';
+    playBtn.style.display='inline';
+    timeEl.textContent='00:00';
+    total.textContent=fmtTime(rs.duration);
+    tip.textContent='';
+    tip.style.display='none';
+    status.textContent='Opname klaar. Beluister uw antwoord of ga door naar de volgende vraag.';
+  } else if(rs.state==='scoring'||rs.state==='scored'){
+    dot.style.display='none';
+    trash.style.display='none';
+    playBtn.style.display='inline';
+    timeEl.textContent='00:00';
+    total.textContent=fmtTime(rs.duration);
+    status.textContent=rs.state==='scoring'?'Antwoord wordt beoordeeld...':'Antwoord beoordeeld.';
+  }
+}
+
+function handleRecBarClick(){
+  const sc=examScreens[curScreenIdx];
+  if(sc.type!=='question')return;
+  const rs=recStates[sc.qIdx];
+  if(rs.state==='idle')startRec(sc.qIdx);
+  else if(rs.state==='recording')stopRec(sc.qIdx);
+}
+
+function startRec(qIdx){
+  const rs=recStates[qIdx];
+  if(rs.state!=='idle')return;
+  chunks=[];
+  playBeep(880,0.15);
+  recorder=new MediaRecorder(stream);
+  recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+  recorder.onstop=()=>onRecStop(qIdx);
+  recorder.start();
+  rs.state='recording';rs.elapsed=0;
+  recElapsed=0;
+  recTimer=setInterval(()=>{
+    recElapsed++;rs.elapsed=recElapsed;
+    const pct=(recElapsed/MAX_SECS)*100;
+    const fill=document.getElementById('recFill');
+    fill.style.width=Math.min(pct,100)+'%';
+    fill.className='rec-prog-fill'+(pct>=100?' danger':pct>=80?' warn':'');
+    document.getElementById('recTime').textContent=fmtTime(recElapsed);
+    if(recElapsed>=MAX_SECS)stopRec(qIdx);
+  },1000);
+  renderRecBar(qIdx);
+  document.getElementById('recTip').style.display='block';
+}
+
+function stopRec(qIdx){
+  clearInterval(recTimer);recTimer=null;
   playBeep(440,0.25);
-  document.getElementById('recDot').classList.remove('active');
-  document.getElementById('btnStop').disabled=true;
-  if(recorder&&recorder.state!=='inactive') recorder.stop();
+  if(recorder&&recorder.state!=='inactive')recorder.stop();
 }
 
-function onStop() {
-  audioBlob = new Blob(audioChunks,{type:'audio/webm'});
-  document.getElementById('audioPlayer').src = URL.createObjectURL(audioBlob);
-  document.getElementById('audioWrap').classList.add('visible');
-  document.getElementById('reviewBtnRow').style.display='flex';
-  document.getElementById('btnStart').disabled=false;
-  setStatus('Opname klaar. Beluister uw antwoord, neem opnieuw op, of dien het in.','');
+function onRecStop(qIdx){
+  const rs=recStates[qIdx];
+  const blob=new Blob(chunks,{type:'audio/webm'});
+  rs.blob=blob;
+  rs.url=URL.createObjectURL(blob);
+  rs.duration=recElapsed;
+  rs.state='recorded';
+  renderRecBar(qIdx);
+  updateOvGrid();
 }
 
-function reRecord() {
-  audioBlob=null; audioChunks=[];
-  document.getElementById('audioWrap').classList.remove('visible');
-  document.getElementById('reviewBtnRow').style.display='none';
-  document.getElementById('timerBar').style.width='0%';
-  document.getElementById('timerBar').className='timer-bar';
-  document.getElementById('timerText').textContent='00:00';
-  elapsed=0;
-  setStatus('Druk op <strong>Start opname</strong> om opnieuw op te nemen.','');
+function togglePlayback(){
+  const sc=examScreens[curScreenIdx];
+  if(sc.type!=='question')return;
+  const rs=recStates[sc.qIdx];
+  if(!rs.url)return;
+  if(playAudio&&!playAudio.paused){
+    playAudio.pause();
+    document.getElementById('recPlayBtn').textContent='▶';
+    return;
+  }
+  if(!playAudio||playAudio.src!==rs.url){
+    playAudio=new Audio(rs.url);
+    playAudio.onended=()=>{document.getElementById('recPlayBtn').textContent='▶';};
+    playAudio.ontimeupdate=()=>{
+      const p=(playAudio.currentTime/playAudio.duration)*100;
+      document.getElementById('recFill').style.width=p+'%';
+      document.getElementById('recTime').textContent=fmtTime(Math.floor(playAudio.currentTime));
+    };
+  }
+  playAudio.play();
+  document.getElementById('recPlayBtn').textContent='⏸';
 }
 
-function stopAll() {
-  clearInterval(timerInterval);
-  if(recorder&&recorder.state!=='inactive') recorder.stop();
+function showDelConfirm(){document.getElementById('delConfirm').style.display='block';}
+function hideDelConfirm(){document.getElementById('delConfirm').style.display='none';}
+function deleteRecording(){
+  const sc=examScreens[curScreenIdx];
+  if(sc.type!=='question')return;
+  const rs=recStates[sc.qIdx];
+  if(playAudio){playAudio.pause();playAudio=null;}
+  rs.state='idle';rs.blob=null;rs.url=null;rs.duration=0;rs.elapsed=0;
+  hideDelConfirm();
+  renderRecBar(sc.qIdx);
+  updateOvGrid();
 }
 
-// ── SUBMIT & SCORE ────────────────────────────────────
-async function submitAnswer() {
-  if(!audioBlob) return;
-  document.getElementById('reviewBtnRow').style.display='none';
-  document.getElementById('btnStart').disabled=true;
-  setStatus('<span class="spinner"></span>Antwoord wordt getranscribeerd...','processing');
+// ══════════ NAVIGATION ══════════
+function updateNav(){
+  const sc=examScreens[curScreenIdx];
+  document.getElementById('btnVorige').disabled=curScreenIdx===0;
+  const isLast=curScreenIdx===examScreens.length-1;
+  document.getElementById('btnVolgende').textContent=isLast?'AFRONDEN ›':'VOLGENDE ›';
+  // Bookmark only for question screens
+  const bm=document.getElementById('btnBookmark');
+  bm.style.visibility=sc.type==='question'?'visible':'hidden';
+  bm.className='nav-icon-btn'+(bookmarks.has(curScreenIdx)?' bookmarked':'');
+  // q badge
+  const qNums=examScreens.filter((s,i)=>s.type==='question'&&i<=curScreenIdx).length;
+  const qTotal=examScreens.filter(s=>s.type==='question').length;
+  document.getElementById('qBadge').textContent=sc.type==='question'?qNums+'/'+qTotal:(curScreenIdx===0?'Intro':'›');
+}
 
-  let transcript='';
-  try {
-    const b64 = (await blobToBase64(audioBlob)).split(',')[1];
-    const tr = await callAnthropic([{role:'user',content:[
-      {type:'text',text:'Transcribe this Dutch audio recording accurately. Return ONLY the transcription text, nothing else.'},
+function updateOvBadge(){updateNav();}
+
+function goVorige(){
+  if(curScreenIdx>0){
+    if(playAudio){playAudio.pause();playAudio=null;}
+    curScreenIdx--;
+    renderCurrentScreen();
+  }
+}
+
+function goVolgende(){
+  const sc=examScreens[curScreenIdx];
+  if(sc.type==='question'){
+    const rs=recStates[sc.qIdx];
+    if(rs.state==='idle'){
+      // Warn about no recording
+      pendingSkip=false;
+      document.getElementById('warnOverlay').classList.add('open');
+      return;
+    }
+    // Submit if recorded
+    if(rs.state==='recorded'){
+      submitAnswer(sc.qIdx);
+    }
+  }
+  advanceScreen();
+}
+
+function closeWarn(){document.getElementById('warnOverlay').classList.remove('open');}
+function confirmSkip(){closeWarn();advanceScreen();}
+
+function advanceScreen(){
+  if(playAudio){playAudio.pause();playAudio=null;}
+  if(curScreenIdx>=examScreens.length-1){endSession();return;}
+  curScreenIdx++;
+  renderCurrentScreen();
+}
+
+// ══════════ SUBMIT + SCORE ══════════
+async function submitAnswer(qIdx){
+  const rs=recStates[qIdx];
+  if(rs.state!=='recorded')return;
+  rs.state='scoring';
+
+  // Transcribe
+  try{
+    const b64=(await blobToBase64(rs.blob)).split(',')[1];
+    const tr=await callAPI([{role:'user',content:[
+      {type:'text',text:'Transcribe this Dutch audio recording accurately. Return ONLY the transcription, nothing else.'},
       {type:'document',source:{type:'base64',media_type:'audio/webm',data:b64}}
     ]}],500);
-    transcript = tr.content?.[0]?.text?.trim()||'';
-  } catch(e) {
-    setStatus('Fout bij transcriptie: '+e.message,'error');
-    document.getElementById('reviewBtnRow').style.display='flex';
-    document.getElementById('btnStart').disabled=false;
-    return;
+    rs.transcript=tr.content?.[0]?.text?.trim()||'';
+  }catch(e){rs.transcript='[transcriptie mislukt]';}
+
+  // Score
+  const sc=examScreens.find(s=>s.type==='question'&&s.qIdx===qIdx);
+  let qText='';
+  if(sc?.deel===1&&sc.videoQ)qText=sc.videoQ.context+' '+sc.videoQ.question+' '+sc.videoQ.followup;
+  else if(sc?.questionText)qText=sc.questionText.context+' '+sc.questionText.question+' '+sc.questionText.followup;
+
+  const fn=focusCrit?`\nCriterion drill focus: ${focusCrit} — give extra detail.`:'';
+  const sp=`Score this Dutch A2 inburgering Spreken exam response.\nQuestion: "${qText}"\nTranscript: "${rs.transcript}"${fn}\n\nOfficial DUO rubric:\n1. adequaatheid (0-3): 0=missing/unintelligible/not answering, 1=imaginable but incomplete, 2=understandable+adequate, 3=excellent. IF 0: ALL others MUST be 0.\n2. woordenschat (0-2): 0=only basic words, 1=simple but appropriate, 2=excellent\n3. grammatica (0-2): 0=many errors, 1=quite a few, 2=hardly any\n4. vloeiendheid (0-2): 0=not fluent/many pauses, 1=somewhat fluent, 2=fluent\n5. coherentie (0-1): 0=no structure, 1=uses connectors/reference words\n6. uitspraak (0-2): from transcript quality. Always note assessed from transcript.\n\nReturn ONLY valid JSON:\n{"adequaatheid":{"score":N,"en":"...","nl":"..."},"woordenschat":{"score":N,"en":"...","nl":"..."},"grammatica":{"score":N,"en":"...","nl":"..."},"vloeiendheid":{"score":N,"en":"...","nl":"..."},"coherentie":{"score":N,"en":"...","nl":"..."},"uitspraak":{"score":N,"en":"...","nl":"..."},"went_well_en":"...","went_well_nl":"...","improve_en":"...","improve_nl":"..."}`;
+
+  try{
+    const sr=await callAPI([{role:'user',content:sp}],800);
+    rs.scores=JSON.parse((sr.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
+    rs.total=CRITERIA.reduce((s,c)=>s+(rs.scores[c]?.score||0),0);
+  }catch(e){rs.scores=null;rs.total=0;}
+
+  rs.state='scored';
+  updateHdrScore();
+  updateOvGrid();
+  // If still on same question, show feedback
+  const cur=examScreens[curScreenIdx];
+  if(cur.type==='question'&&cur.qIdx===qIdx){
+    renderFeedback(qIdx);
+    document.getElementById('fbCard').style.display='block';
   }
-
-  setStatus('<span class="spinner"></span>Antwoord wordt beoordeeld...','processing');
-
-  const q = questions[currentQIdx];
-  let qText = '';
-  if(q.type==='video'&&q.videoQ) qText=q.videoQ.context+' '+q.videoQ.question+' '+q.videoQ.followup;
-  else if(q.questionText) qText=q.questionText.context+' '+q.questionText.question+' '+q.questionText.followup;
-
-  const focusNote = sessionFocusCriterion ? `\nCriterion drill focus: ${sessionFocusCriterion} — give extra detail on this criterion.` : '';
-
-  const scoringPrompt = `Score this Dutch A2 inburgering Spreken exam response.
-
-Question: "${qText}"
-Transcript: "${transcript}"
-${focusNote}
-
-Official DUO rubric:
-1. adequaatheid (0-3): 0=missing/unintelligible/not answering question, 1=imaginable but incomplete, 2=understandable+adequate, 3=clear+excellent. IF 0: all others MUST be 0.
-2. woordenschat (0-2): 0=only basic words insufficient, 1=simple but appropriate, 2=excellent
-3. grammatica (0-2): 0=many errors, 1=quite a few errors, 2=hardly any
-4. vloeiendheid (0-2): 0=not fluent/many pauses, 1=somewhat fluent, 2=fluent
-5. coherentie (0-1): 0=no structure, 1=uses connectors (en/maar/want/omdat) or reference words
-6. uitspraak (0-2): assess from transcript quality. Always note assessed from transcript.
-
-Return ONLY valid JSON (no markdown):
-{"adequaatheid":{"score":N,"en":"comment","nl":"opmerking"},"woordenschat":{"score":N,"en":"comment","nl":"opmerking"},"grammatica":{"score":N,"en":"comment","nl":"opmerking"},"vloeiendheid":{"score":N,"en":"comment","nl":"opmerking"},"coherentie":{"score":N,"en":"comment","nl":"opmerking"},"uitspraak":{"score":N,"en":"comment","nl":"opmerking"},"went_well_en":"...","went_well_nl":"...","improve_en":"...","improve_nl":"..."}`;
-
-  let scores=null;
-  try {
-    const sr = await callAnthropic([{role:'user',content:scoringPrompt}],800);
-    scores = JSON.parse((sr.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
-  } catch(e) {
-    setStatus('Fout bij beoordeling: '+e.message,'error');
-    document.getElementById('reviewBtnRow').style.display='flex';
-    document.getElementById('btnStart').disabled=false;
-    return;
-  }
-
-  const total = CRITERIA.reduce((s,c)=>s+(scores[c]?.score||0),0);
-  answers[currentQIdx] = { transcript, scores, total };
-  updateHeaderScore();
-  renderFeedback(currentQIdx);
-  setStatus('Beoordeeld. Bekijk de feedback hieronder.','success');
 }
 
-function renderFeedback(idx) {
-  const ans = answers[idx];
-  if(!ans) return;
-  const {scores,total} = ans;
-  const pass = total >= PASS_PER_Q;
-  const maxByC = {adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
-  const lbls = {adequaatheid:'Adequacy / Adequaatheid',woordenschat:'Vocabulary / Woordenschat',grammatica:'Grammar / Grammatica',vloeiendheid:'Fluency / Vloeiendheid',coherentie:'Coherence / Coherentie',uitspraak:'Pronunciation / Uitspraak'};
-  const rows = CRITERIA.map(c=>{
-    const sc=scores[c]?.score??0, mx=maxByC[c], r=sc/mx;
-    const cls=r>=0.75?'good':r>=0.4?'mid':'bad';
-    return `<tr><td>${lbls[c]}</td><td><span class="score-val ${cls}">${sc}/${mx}</span></td><td>${scores[c]?.en||''}</td><td>${scores[c]?.nl||''}</td></tr>`;
+function renderFeedback(qIdx){
+  const rs=recStates[qIdx];
+  if(!rs.scores)return;
+  const {scores,total}=rs;
+  const pass=total>=PASS_Q;
+  const maxByC={adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
+  const lbls={adequaatheid:'Adequacy / Adequaatheid',woordenschat:'Vocabulary / Woordenschat',grammatica:'Grammar / Grammatica',vloeiendheid:'Fluency / Vloeiendheid',coherentie:'Coherence / Coherentie',uitspraak:'Pronunciation / Uitspraak'};
+  const rows=CRITERIA.map(c=>{
+    const sc=scores[c]?.score??0,mx=maxByC[c],r=sc/mx;
+    const cls=r>=.75?'g':r>=.4?'m':'b';
+    return`<tr><td>${lbls[c]}</td><td><span class="sv ${cls}">${sc}/${mx}</span></td><td>${scores[c]?.en||''}</td><td>${scores[c]?.nl||''}</td></tr>`;
   }).join('');
-  const card = document.getElementById('feedbackCard');
-  card.style.display='block';
-  card.innerHTML=`
-    <div class="feedback-header">
-      <span class="feedback-title">Vraag ${idx+1} van ${questions.length} — Beoordeling</span>
-      <span class="feedback-total ${pass?'pass':'fail'}">${total}/${MAX_PER_Q} ${pass?'✓ Geslaagd':'✗ Onder grens'}</span>
-    </div>
-    <table class="score-table">
-      <thead><tr><th>Criterium</th><th>Score</th><th>English</th><th>Nederlands</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <hr class="divider">
-    <div class="feedback-section">
-      <h4>What went well / Wat ging goed</h4>
-      <p class="en">${scores.went_well_en||''}</p>
-      <p class="nl">${scores.went_well_nl||''}</p>
-    </div>
-    <div class="feedback-section">
-      <h4>What to improve / Wat kan beter</h4>
-      <p class="en">${scores.improve_en||''}</p>
-      <p class="nl">${scores.improve_nl||''}</p>
-    </div>`;
+  const fb=document.getElementById('fbCard');
+  fb.innerHTML=`<div class="fb-header"><span class="fb-title">Beoordeling</span><span class="fb-total ${pass?'pass':'fail'}">${total}/${MAX_Q} ${pass?'✓ Geslaagd':'✗ Onder grens'}</span></div>
+  <table class="score-tbl"><thead><tr><th>Criterium</th><th>Score</th><th>English</th><th>Nederlands</th></tr></thead><tbody>${rows}</tbody></table>
+  <hr class="divider">
+  <div class="fb-sec"><h4>What went well / Wat ging goed</h4><p class="en">${scores.went_well_en||''}</p><p class="nl">${scores.went_well_nl||''}</p></div>
+  <div class="fb-sec"><h4>What to improve / Wat kan beter</h4><p class="en">${scores.improve_en||''}</p><p class="nl">${scores.improve_nl||''}</p></div>`;
 }
 
-// ── NAVIGATION ────────────────────────────────────────
-function prevQuestion() { if(currentQIdx>0) loadQuestion(currentQIdx-1); }
-function nextQuestion() {
-  if(currentQIdx>=questions.length-1) endSession();
-  else loadQuestion(currentQIdx+1);
+// ══════════ OVERZICHT ══════════
+function showOverzicht(){updateOvGrid();document.getElementById('ovModal').classList.add('open');}
+function hideOverzicht(){document.getElementById('ovModal').classList.remove('open');}
+
+function updateOvGrid(){
+  const grid=document.getElementById('ovGrid');
+  let qNum=0;
+  grid.innerHTML=examScreens.map((sc,idx)=>{
+    let cls='ov-btn';
+    let label='ⓘ';
+    if(sc.type==='info'){
+      cls+=' ov-info';
+    } else {
+      qNum++;
+      label=qNum;
+      const rs=recStates[sc.qIdx];
+      if(idx===curScreenIdx)cls+=' ov-current';
+      else if(rs.state==='scored'||rs.state==='scoring')cls+=' ov-answered';
+      else if(rs.state==='recording')cls+=' ov-scoring';
+    }
+    if(bookmarks.has(idx))cls+=' ov-bookmarked';
+    return`<button class="${cls}" onclick="navToScreen(${idx});hideOverzicht()">${label}</button>`;
+  }).join('');
 }
 
-// ── SESSION END ───────────────────────────────────────
-function endSession() {
-  stopAll();
-  const answered = answers.filter(Boolean);
+function navToScreen(idx){
+  if(playAudio){playAudio.pause();playAudio=null;}
+  curScreenIdx=idx;
+  renderCurrentScreen();
+}
+
+// ══════════ BOOKMARKS ══════════
+function toggleBookmark(){
+  const sc=examScreens[curScreenIdx];
+  if(sc.type!=='question')return;
+  if(bookmarks.has(curScreenIdx))bookmarks.delete(curScreenIdx);
+  else bookmarks.add(curScreenIdx);
+  updateNav();
+  updateOvGrid();
+}
+
+// ══════════ SESSION END ══════════
+function endSession(){
+  stopExamTimer();stopRecCleanup();
+  document.getElementById('timerWrap').style.display='none';
+  const answered=recStates.filter(r=>r&&r.total!==null);
   if(!answered.length){goHome();return;}
-  const totalScore=answered.reduce((s,a)=>s+a.total,0);
-  const maxScore=answered.length*MAX_PER_Q;
-  const passed=totalScore>=(PASS_PER_Q*answered.length);
+  const totalScore=answered.reduce((s,r)=>s+r.total,0);
+  const maxScore=answered.length*MAX_Q;
+  const passed=totalScore>=(PASS_Q*answered.length);
   const partScores={};
-  PARTS.forEach(p=>{
-    const pa=questions.map((q,i)=>q.part===p.id?answers[i]:null).filter(Boolean);
-    if(pa.length) partScores['deel'+p.id]=pa.reduce((s,a)=>s+a.total,0)/pa.length;
+  [1,2,3,4].forEach(pd=>{
+    const pqs=examScreens.filter(s=>s.type==='question'&&s.deel===pd).map(s=>recStates[s.qIdx]).filter(r=>r&&r.total!==null);
+    if(pqs.length)partScores['deel'+pd]=pqs.reduce((s,r)=>s+r.total,0)/pqs.length;
   });
   const critScores={};
-  CRITERIA.forEach(c=>{
-    const vals=answered.map(a=>a.scores[c]?.score??0);
-    critScores[c]=vals.reduce((s,v)=>s+v,0)/vals.length;
-  });
-  const prog=loadProgress();
-  prog.sessions.push({date:new Date().toISOString().split('T')[0],mode:sessionMode,totalScore,maxScore,passed,partScores,criterionScores:critScores});
-  saveProgress(prog);
+  CRITERIA.forEach(c=>{const v=answered.map(r=>r.scores?.[c]?.score??0);critScores[c]=v.reduce((s,x)=>s+x,0)/v.length;});
+  const p=loadProgress();
+  p.sessions.push({date:new Date().toISOString().split('T')[0],mode:sessionMode,totalScore,maxScore,passed,partScores,criterionScores:critScores});
+  saveProgress(p);
   renderSummary(totalScore,maxScore,passed,partScores,critScores);
-  showScreen('screenSummary');
+  showScreen('scrSummary');
 }
 
-function renderSummary(total,max,passed,partScores,critScores) {
-  document.getElementById('summarySubtitle').textContent=`${total}/${max} punten — ${passed?'✓ Geslaagd':'✗ Onder slagingsgrens'}`;
-  const prog=loadProgress();
-  const avg=avgScore(prog);
-  const verdict=avg>=115.2/192?'🟢 Ready to attempt the exam / Klaar voor het examen':avg>=80/192?'🟡 Approaching / Op weg':'🔴 Not yet ready / Nog niet klaar';
+function renderSummary(total,max,passed,partScores,critScores){
+  document.getElementById('summSub').textContent=`${total}/${max} punten — ${passed?'✓ Geslaagd':'✗ Onder slagingsgrens'}`;
+  const p=loadProgress();const avg=avgScore(p);
+  const v=avg>=115.2/192?'🟢 Ready / Klaar voor het examen':avg>=80/192?'🟡 Approaching / Op weg':'🔴 Not yet ready / Nog niet klaar';
   const maxByC={adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
-  const partRows=Object.entries(partScores).map(([k,v])=>`<tr><td>${k.replace('deel','Deel ')}</td><td>${v.toFixed(1)}/${MAX_PER_Q}</td><td>${v>=PASS_PER_Q?'✓':'✗'}</td></tr>`).join('');
-  const critRows=CRITERIA.map(c=>{const v=critScores[c]||0,mx=maxByC[c];return`<tr><td style="text-transform:capitalize">${c}</td><td>${v.toFixed(1)}/${mx}</td></tr>`;}).join('');
-  document.getElementById('summaryContent').innerHTML=`
-    <div class="feedback-card" style="margin-bottom:12px;">
-      <div class="feedback-header"><span class="feedback-title">Gereedheidsverdict</span></div>
-      <p style="font-size:14px;font-weight:600;margin-bottom:4px;">${verdict}</p>
-    </div>
-    <div class="feedback-card" style="margin-bottom:12px;">
-      <div class="feedback-title" style="margin-bottom:12px;">Score per deel</div>
-      <table class="score-table"><thead><tr><th>Deel</th><th>Gemiddelde</th><th>Resultaat</th></tr></thead><tbody>${partRows}</tbody></table>
-    </div>
-    <div class="feedback-card">
-      <div class="feedback-title" style="margin-bottom:12px;">Score per criterium</div>
-      <table class="score-table"><thead><tr><th>Criterium</th><th>Gemiddelde</th></tr></thead><tbody>${critRows}</tbody></table>
-    </div>`;
+  const pr=Object.entries(partScores).map(([k,v])=>`<tr><td>${k.replace('deel','Onderdeel ')}</td><td>${v.toFixed(1)}/${MAX_Q}</td><td>${v>=PASS_Q?'✓':'✗'}</td></tr>`).join('');
+  const cr=CRITERIA.map(c=>{const v=critScores[c]||0,mx=maxByC[c];return`<tr><td style="text-transform:capitalize">${c}</td><td>${v.toFixed(1)}/${mx}</td></tr>`;}).join('');
+  document.getElementById('summContent').innerHTML=`
+  <div class="info-card" style="margin-bottom:12px"><div class="info-section"><h3>Gereedheidsverdict</h3><p>${v}</p></div></div>
+  <div class="info-card" style="margin-bottom:12px"><div class="info-section"><h3>Score per onderdeel</h3>
+  <table class="score-tbl"><thead><tr><th>Onderdeel</th><th>Gemiddelde</th><th>Resultaat</th></tr></thead><tbody>${pr}</tbody></table></div></div>
+  <div class="info-card"><div class="info-section"><h3>Score per criterium</h3>
+  <table class="score-tbl"><thead><tr><th>Criterium</th><th>Gemiddelde</th></tr></thead><tbody>${cr}</tbody></table></div></div>`;
 }
 
-// ── PROGRESS ──────────────────────────────────────────
-function renderProgress() {
-  const prog=loadProgress();
-  document.getElementById('progressTitle').textContent=`Voortgang — ${currentUser}`;
-  const sessions=prog.sessions;
-  const avg=avgScore(prog);
-  const verdict=avg>=115.2/192?'🟢 Klaar':avg>=80/192?'🟡 Op weg':'🔴 Nog niet klaar';
-  const last=sessions.length?sessions[sessions.length-1].totalScore+'/'+sessions[sessions.length-1].maxScore:'—';
-  document.getElementById('progressStats').innerHTML=`
-    <div class="stat-card"><div class="val">${sessions.length}</div><div class="lbl">Sessies totaal</div></div>
-    <div class="stat-card"><div class="val">${sessions.filter(s=>s.passed).length}</div><div class="lbl">Geslaagd</div></div>
-    <div class="stat-card"><div class="val">${last}</div><div class="lbl">Laatste sessie</div></div>
-    <div class="stat-card"><div class="val">${verdict}</div><div class="lbl">Gereedheid</div></div>`;
+// ══════════ PROGRESS ══════════
+function renderProgress(){
+  const p=loadProgress();
+  document.getElementById('progTitle').textContent='Voortgang — '+cUser;
+  const ss=p.sessions;const avg=avgScore(p);
+  const vd=avg>=115.2/192?'🟢 Klaar':avg>=80/192?'🟡 Op weg':'🔴 Nog niet klaar';
+  const last=ss.length?ss[ss.length-1].totalScore+'/'+ss[ss.length-1].maxScore:'—';
+  document.getElementById('progStats').innerHTML=`
+  <div class="stat-card"><div class="val">${ss.length}</div><div class="lbl">Sessies totaal</div></div>
+  <div class="stat-card"><div class="val">${ss.filter(s=>s.passed).length}</div><div class="lbl">Geslaagd</div></div>
+  <div class="stat-card"><div class="val">${last}</div><div class="lbl">Laatste sessie</div></div>
+  <div class="stat-card"><div class="val">${vd}</div><div class="lbl">Gereedheid</div></div>`;
   const maxByC={adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
-  document.getElementById('criterionBars').innerHTML=sessions.length?CRITERIA.map(c=>{
-    const a=sessions.reduce((s,x)=>s+(x.criterionScores?.[c]||0),0)/sessions.length;
-    return`<div class="crit-bar-wrap"><div class="crit-bar-label"><span style="text-transform:capitalize">${c}</span><span>${a.toFixed(1)}/${maxByC[c]}</span></div><div class="crit-bar-bg"><div class="crit-bar-fill" style="width:${(a/maxByC[c])*100}%"></div></div></div>`;
+  document.getElementById('critBars').innerHTML=ss.length?CRITERIA.map(c=>{
+    const a=ss.reduce((s,x)=>s+(x.criterionScores?.[c]||0),0)/ss.length;
+    return`<div class="crit-bar-wrap"><div class="crit-bar-lbl"><span style="text-transform:capitalize">${c}</span><span>${a.toFixed(1)}/${maxByC[c]}</span></div><div class="crit-bar-bg"><div class="crit-bar-fill" style="width:${(a/maxByC[c])*100}%"></div></div></div>`;
   }).join(''):'<p style="font-size:13px;color:var(--text-muted)">Nog geen sessiegegevens.</p>';
-  document.getElementById('historyBody').innerHTML=sessions.slice().reverse().map(s=>
+  document.getElementById('histBody').innerHTML=ss.slice().reverse().map(s=>
     `<tr><td>${s.date}</td><td style="text-transform:capitalize">${s.mode}</td><td style="font-family:var(--mono)">${s.totalScore}/${s.maxScore}</td><td><span class="${s.passed?'badge-pass':'badge-fail'}">${s.passed?'Geslaagd':'Niet geslaagd'}</span></td></tr>`
   ).join('')||'<tr><td colspan="4" style="color:var(--text-muted);font-size:13px">Nog geen sessies.</td></tr>';
 }
 
-function loadProgress() {
-  try { return JSON.parse(localStorage.getItem(currentUser.toLowerCase()+'_progress'))||{user:currentUser,sessions:[]}; }
-  catch(e) { return {user:currentUser,sessions:[]}; }
-}
+function loadProgress(){try{return JSON.parse(localStorage.getItem(cUser.toLowerCase()+'_progress'))||{user:cUser,sessions:[]};}catch(e){return{user:cUser,sessions:[]};}}
+function saveProgress(d){localStorage.setItem(cUser.toLowerCase()+'_progress',JSON.stringify(d));}
 
-function saveProgress(data) {
-  localStorage.setItem(currentUser.toLowerCase()+'_progress',JSON.stringify(data));
-}
-
-function downloadProgress() {
-  const prog=loadProgress();
-  const sessions=prog.sessions;
-  const avg=avgScore(prog);
-  const verdict=avg>=115.2/192?'🟢 Klaar voor het examen / Ready':avg>=80/192?'🟡 Op weg / Approaching':'🔴 Nog niet klaar / Not yet ready';
+function dlProgress(){
+  const p=loadProgress();const ss=p.sessions;const avg=avgScore(p);
+  const v=avg>=115.2/192?'🟢 Klaar voor het examen / Ready':avg>=80/192?'🟡 Op weg / Approaching':'🔴 Nog niet klaar / Not yet ready';
   const maxByC={adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
-  const critRows=CRITERIA.map(c=>{
-    const a=sessions.length?sessions.reduce((s,x)=>s+(x.criterionScores?.[c]||0),0)/sessions.length:0;
-    return`| ${c} | ${a.toFixed(1)}/${maxByC[c]} | ${a/maxByC[c]>=0.6?'Sterk':'Aandachtspunt'} |`;
-  }).join('\n');
-  const sesRows=sessions.slice().reverse().map(s=>`| ${s.date} | ${s.mode} | ${s.totalScore}/${s.maxScore} | ${s.passed?'Ja':'Nee'} |`).join('\n');
-  const md=`# ${currentUser} — Spreken A2 Voortgang\n\n## Status\n- Datum: ${new Date().toISOString().split('T')[0]}\n- Gereedheid: ${verdict}\n- Sessies: ${sessions.length}\n\n## Gemiddelden per criterium\n| Criterium | Gemiddelde | Status |\n|---|---|---|\n${critRows}\n\n## Sessiegeschiedenis\n| Datum | Modus | Score | Geslaagd? |\n|---|---|---|---|\n${sesRows||'| — | — | — | — |'}\n`;
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([md],{type:'text/markdown'}));
-  a.download=`${currentUser}_progress.md`;
-  a.click();
+  const cr=CRITERIA.map(c=>{const a=ss.length?ss.reduce((s,x)=>s+(x.criterionScores?.[c]||0),0)/ss.length:0;return`| ${c} | ${a.toFixed(1)}/${maxByC[c]} | ${a/maxByC[c]>=.6?'Sterk':'Aandachtspunt'} |`;}).join('\n');
+  const sr=ss.slice().reverse().map(s=>`| ${s.date} | ${s.mode} | ${s.totalScore}/${s.maxScore} | ${s.passed?'Ja':'Nee'} |`).join('\n');
+  const md=`# ${cUser} — Spreken A2 Voortgang\n\n## Status\n- Datum: ${new Date().toISOString().split('T')[0]}\n- Gereedheid: ${v}\n- Sessies: ${ss.length}\n\n## Per criterium\n| Criterium | Gemiddelde | Status |\n|---|---|---|\n${cr}\n\n## Sessiegeschiedenis\n| Datum | Modus | Score | Geslaagd? |\n|---|---|---|---|\n${sr||'| — | — | — | — |'}\n`;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([md],{type:'text/markdown'}));a.download=cUser+'_progress.md';a.click();
 }
 
-// ── HEADER SCORE ──────────────────────────────────────
-function updateHeaderScore() {
-  const ans=answers.filter(Boolean);
-  if(!ans.length){document.getElementById('headerScore').style.display='none';return;}
-  const total=ans.reduce((s,a)=>s+a.total,0),max=ans.length*MAX_PER_Q;
-  document.getElementById('headerScore').textContent=`${total}/${max}`;
-  document.getElementById('headerScore').style.display='inline';
+// ══════════ HEADER SCORE ══════════
+function updateHdrScore(){
+  const sc=recStates.filter(r=>r&&r.total!==null);
+  if(!sc.length){document.getElementById('hdrScore').style.display='none';return;}
+  const t=sc.reduce((s,r)=>s+r.total,0),mx=sc.length*MAX_Q;
+  document.getElementById('hdrScore').textContent=t+'/'+mx;
+  document.getElementById('hdrScore').style.display='inline';
 }
 
-// ── HELPERS ───────────────────────────────────────────
-function setStatus(html,type) {
-  const b=document.getElementById('statusBox');
-  b.innerHTML=html;
-  b.className='status-box'+(type?' '+type:'');
-}
+// ══════════ HELPERS ══════════
+function fmtTime(secs){const m=Math.floor(secs/60),s=secs%60;return`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
 
-function blobToBase64(blob) {
-  return new Promise((res,rej)=>{ const r=new FileReader(); r.onloadend=()=>res(r.result); r.onerror=rej; r.readAsDataURL(blob); });
-}
+function blobToBase64(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onloadend=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob);});}
 
-async function callAnthropic(messages,maxTokens) {
+async function callAPI(msgs,maxTok){
   const r=await fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':currentApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
-    body:JSON.stringify({model:ANTHROPIC_MODEL,max_tokens:maxTokens,messages})
+    headers:{'Content-Type':'application/json','x-api-key':cApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
+    body:JSON.stringify({model:MODEL,max_tokens:maxTok,messages:msgs})
   });
   if(!r.ok){const e=await r.json();throw new Error(e.error?.message||r.status);}
   return r.json();
 }
 
-function playBeep(freq,dur) {
-  try {
+function playBeep(freq,dur){
+  try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    const osc=ctx.createOscillator(),gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
+    const osc=ctx.createOscillator(),g=ctx.createGain();
+    osc.connect(g);g.connect(ctx.destination);
     osc.frequency.value=freq;
-    gain.gain.setValueAtTime(0.3,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    g.gain.setValueAtTime(.3,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);
     osc.start(ctx.currentTime);osc.stop(ctx.currentTime+dur);
-  } catch(e){}
+  }catch(e){}
+}
+
+function stopRecCleanup(){
+  clearInterval(recTimer);recTimer=null;
+  if(recorder&&recorder.state!=='inactive')recorder.stop();
+  if(playAudio){playAudio.pause();playAudio=null;}
 }
 </script>
-<!-- API KEY SETUP (first time per device) -->
-<div class="screen" id="screenApiSetup">
-  <div class="login-wrap">
-    <div class="login-card">
-      <h2>API sleutel instellen</h2>
-      <p>Welkom, <strong id="apiSetupUser"></strong>! Dit is uw eerste keer op dit apparaat. Voer uw Anthropic API-sleutel in. Deze wordt versleuteld opgeslagen — u hoeft dit maar één keer te doen op dit apparaat.</p>
-      <div class="field">
-        <label>Anthropic API-sleutel</label>
-        <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" onkeydown="if(event.key==='Enter')saveApiKey()">
-      </div>
-      <div class="error-msg" id="apiSetupError" style="display:none;">Ongeldige sleutel. De sleutel moet beginnen met "sk-ant-".</div>
-      <button class="btn btn-primary" style="width:100%;" onclick="saveApiKey()">Sleutel opslaan en beginnen</button>
-      <p style="font-size:11px;color:var(--text-muted);margin-top:12px;line-height:1.5;">Uw sleutel wordt versleuteld opgeslagen met uw wachtwoord als sleutel. Niemand anders kan deze lezen.</p>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
