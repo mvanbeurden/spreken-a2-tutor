@@ -3,661 +3,1103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spreken A2 — Opname</title>
+<title>Spreken A2 — Oefenexamen</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1e4272; --navy-light: #2a5a9e; --navy-dark: #142d50;
+  --red: #c0392b; --red-light: #e74c3c; --green: #27ae60; --amber: #e67e22;
+  --bg: #f4f6f9; --surface: #ffffff; --border: rgba(0,0,0,0.1);
+  --text: #1a1a2e; --text-muted: #5a6a7e;
+  --font: 'IBM Plex Sans', sans-serif; --mono: 'IBM Plex Mono', monospace;
+  --radius: 10px; --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* HEADER */
+.app-header {
+  background: var(--navy); color: white; padding: 0 24px; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-left { display: flex; align-items: center; gap: 10px; }
+.header-title { font-size: 15px; font-weight: 500; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.header-score { font-family: var(--mono); font-size: 13px; opacity: 0.85; }
+.btn-header {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  color: white; padding: 5px 12px; border-radius: 6px; font-size: 12px;
+  font-family: var(--font); cursor: pointer;
+}
+.btn-header:hover { background: rgba(255,255,255,0.25); }
 
-  :root {
-    --navy: #1e4272;
-    --navy-light: #2a5a9e;
-    --navy-dark: #142d50;
-    --red: #c0392b;
-    --red-light: #e74c3c;
-    --green: #27ae60;
-    --amber: #e67e22;
-    --bg: #f4f6f9;
-    --surface: #ffffff;
-    --border: rgba(0,0,0,0.1);
-    --text: #1a1a2e;
-    --text-muted: #5a6a7e;
-    --font: 'IBM Plex Sans', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
-    --radius: 10px;
-    --shadow: 0 2px 12px rgba(0,0,0,0.08);
-  }
+/* SCREENS */
+.screen { display: none; min-height: calc(100vh - 52px); }
+.screen.active { display: block; }
 
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+/* LOGIN */
+.login-wrap {
+  display: flex; align-items: center; justify-content: center;
+  min-height: calc(100vh - 52px); padding: 24px;
+}
+.login-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px; width: 100%; max-width: 380px;
+  box-shadow: var(--shadow);
+}
+.login-card h2 { font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+.login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+.user-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.user-btn {
+  padding: 14px; border: 2px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); font-family: var(--font); font-size: 14px; font-weight: 500;
+  cursor: pointer; color: var(--text); transition: all 0.15s;
+}
+.user-btn:hover { border-color: var(--navy); color: var(--navy); }
+.user-btn.selected { border-color: var(--navy); background: #eef2fa; color: var(--navy); }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 500; }
+.field input {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+  font-family: var(--font); font-size: 14px; color: var(--text);
+  background: var(--bg); outline: none; transition: border-color 0.15s;
+}
+.field input:focus { border-color: var(--navy); }
+.error-msg { font-size: 13px; color: var(--red); margin-bottom: 12px; display: none; }
 
-  header {
-    width: 100%;
-    background: var(--navy);
-    color: white;
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+/* HOME */
+.home-wrap { max-width: 600px; margin: 0 auto; padding: 32px 16px; }
+.home-greeting { font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+.home-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+.verdict-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 20px; margin-bottom: 24px; box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 16px;
+}
+.verdict-icon { font-size: 28px; }
+.verdict-text h3 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.verdict-text p { font-size: 12px; color: var(--text-muted); }
+.mode-grid { display: grid; gap: 12px; margin-bottom: 24px; }
+.mode-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px 20px; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow);
+}
+.mode-card:hover { border-color: var(--navy); transform: translateY(-1px); }
+.mode-card h3 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+.mode-card p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.sub-select {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; margin-bottom: 12px; display: none;
+}
+.sub-select p { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
 
-  header h1 { font-size: 15px; font-weight: 500; letter-spacing: 0.01em; }
-  header .subtitle { font-size: 12px; opacity: 0.65; margin-top: 2px; }
+/* EXAM */
+.exam-wrap { max-width: 780px; margin: 0 auto; padding: 20px 16px; }
+.question-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);
+}
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.part-badge {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: white; background: var(--navy); padding: 3px 10px; border-radius: 20px;
+}
+.q-counter { font-size: 12px; color: var(--text-muted); font-family: var(--mono); }
+.q-context { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; font-style: italic; }
+.q-text { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
+.q-instruction { font-size: 13px; color: var(--text-muted); border-left: 3px solid var(--navy); padding-left: 10px; }
 
-  .clock-icon { width: 20px; height: 20px; opacity: 0.9; }
+.video-wrap { width: 100%; border-radius: 8px; overflow: hidden; background: #000; margin-bottom: 16px; display: none; }
+.video-wrap video { width: 100%; display: block; max-height: 320px; }
+.photos-wrap { display: flex; gap: 12px; margin-bottom: 16px; display: none; }
+.photos-wrap img { flex: 1; border-radius: 8px; object-fit: cover; height: 200px; border: 1px solid var(--border); }
+.photos-wrap.single img { height: 240px; }
+.photos-wrap.triple img { height: 160px; }
+.photo-placeholder {
+  flex: 1; border-radius: 8px; height: 200px; background: var(--bg);
+  border: 1px solid var(--border); display: flex; align-items: center;
+  justify-content: center; color: var(--text-muted); font-size: 13px;
+}
 
-  main {
-    width: 100%;
-    max-width: 560px;
-    padding: 24px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+/* RECORDING */
+.recording-panel {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 16px;
+}
+.timer-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.rec-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccc; flex-shrink: 0; transition: background 0.2s; }
+.rec-dot.active { background: var(--red); animation: blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.timer-bar-wrap { flex: 1; height: 8px; background: #e8ecf2; border-radius: 4px; overflow: hidden; }
+.timer-bar { height: 100%; width: 0%; background: var(--navy); border-radius: 4px; transition: width 1s linear, background 0.3s; }
+.timer-bar.warning { background: var(--amber); }
+.timer-bar.danger { background: var(--red); }
+.timer-text { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text-muted); min-width: 48px; text-align: right; }
 
-  /* Setup panel */
-  .setup-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-  }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.btn {
+  padding: 10px 18px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface); font-family: var(--font); font-size: 13px; font-weight: 500;
+  cursor: pointer; color: var(--text); transition: background 0.15s, transform 0.1s; white-space: nowrap;
+}
+.btn:hover:not(:disabled) { background: var(--bg); }
+.btn:active:not(:disabled) { transform: scale(0.98); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-primary { background: var(--navy); color: white; border-color: var(--navy); }
+.btn-primary:hover:not(:disabled) { background: var(--navy-light); }
+.btn-record { background: var(--red); color: white; border-color: var(--red); }
+.btn-record:hover:not(:disabled) { background: var(--red-light); }
+.btn-success { background: var(--green); color: white; border-color: var(--green); }
 
-  .setup-panel h2 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 12px; }
+.status-box { background: var(--bg); border-radius: 6px; padding: 10px 14px; font-size: 13px; color: var(--text-muted); line-height: 1.5; min-height: 40px; }
+.status-box.success { color: var(--green); background: #eafaf1; }
+.status-box.error { color: var(--red); background: #fdecea; }
+.status-box.processing { color: var(--navy); background: #eef2fa; }
+.audio-wrap { margin-top: 12px; display: none; }
+.audio-wrap.visible { display: block; }
+.audio-wrap label { font-size: 11px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+audio { width: 100%; border-radius: 6px; }
 
-  .field { margin-bottom: 12px; }
-  .field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 500; }
-  .field input {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--text);
-    background: var(--bg);
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .field input:focus { border-color: var(--navy); }
+/* FEEDBACK */
+.feedback-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow);
+}
+.feedback-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.feedback-title { font-size: 15px; font-weight: 600; color: var(--navy); }
+.feedback-total { font-family: var(--mono); font-size: 14px; font-weight: 500; }
+.feedback-total.pass { color: var(--green); }
+.feedback-total.fail { color: var(--red); }
+.score-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
+.score-table th { text-align: left; padding: 6px 10px; background: var(--bg); color: var(--text-muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+.score-table td { padding: 8px 10px; border-top: 1px solid var(--border); vertical-align: top; line-height: 1.4; }
+.score-val { font-family: var(--mono); font-weight: 500; white-space: nowrap; }
+.score-val.good { color: var(--green); }
+.score-val.mid { color: var(--amber); }
+.score-val.bad { color: var(--red); }
+.feedback-section { margin-bottom: 12px; }
+.feedback-section h4 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 6px; }
+.feedback-section p { font-size: 13px; line-height: 1.6; }
+.feedback-section .en { color: var(--text); margin-bottom: 4px; }
+.feedback-section .nl { color: var(--text-muted); font-style: italic; }
 
-  .field select {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-family: var(--font);
-    font-size: 13px;
-    color: var(--text);
-    background: var(--bg);
-    outline: none;
-  }
+/* NAV */
+.nav-row { display: flex; gap: 10px; justify-content: space-between; margin-bottom: 16px; }
 
-  /* Question info card */
-  .question-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-    display: none;
-  }
+/* PROGRESS */
+.progress-wrap { max-width: 700px; margin: 0 auto; padding: 24px 16px; }
+.progress-wrap h2 { font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 16px; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; text-align: center; }
+.stat-card .val { font-size: 22px; font-weight: 600; color: var(--navy); font-family: var(--mono); }
+.stat-card .lbl { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.section-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+.crit-bar-wrap { margin-bottom: 8px; }
+.crit-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+.crit-bar-bg { background: #e8ecf2; border-radius: 4px; height: 8px; overflow: hidden; }
+.crit-bar-fill { height: 100%; border-radius: 4px; background: var(--navy); transition: width 0.4s; }
+.history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.history-table th { text-align: left; padding: 8px 10px; background: var(--bg); font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; }
+.history-table td { padding: 8px 10px; border-top: 1px solid var(--border); }
+.badge-pass { background: #eafaf1; color: var(--green); padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-fail { background: #fdecea; color: var(--red); padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 
-  .question-card.visible { display: block; }
+/* SUMMARY */
+.summary-wrap { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+.summary-wrap h2 { font-size: 20px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+.summary-wrap .sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
 
-  .question-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-
-  .part-badge {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: white;
-    background: var(--navy);
-    padding: 3px 10px;
-    border-radius: 20px;
-  }
-
-  .q-counter {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-family: var(--mono);
-  }
-
-  .question-instruction {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.6;
-    border-left: 3px solid var(--navy);
-    padding-left: 12px;
-    margin-top: 4px;
-  }
-
-  /* Recording panel */
-  .recording-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-    display: none;
-  }
-
-  .recording-panel.visible { display: block; }
-
-  /* Timer */
-  .timer-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .rec-dot {
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: #ccc;
-    flex-shrink: 0;
-    transition: background 0.2s;
-  }
-  .rec-dot.active { background: var(--red); animation: blink 1s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  .timer-bar-wrap {
-    flex: 1;
-    height: 6px;
-    background: #e8ecf2;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .timer-bar {
-    height: 100%;
-    width: 0%;
-    background: var(--navy);
-    border-radius: 3px;
-    transition: width 1s linear, background 0.3s;
-  }
-  .timer-bar.warning { background: var(--amber); }
-  .timer-bar.full { background: var(--red); }
-
-  .timer-text {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-muted);
-    min-width: 72px;
-    text-align: right;
-  }
-
-  /* Buttons */
-  .btn-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
-
-  .btn {
-    padding: 10px 18px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    color: var(--text);
-    transition: background 0.15s, transform 0.1s;
-    white-space: nowrap;
-  }
-  .btn:hover:not(:disabled) { background: var(--bg); }
-  .btn:active:not(:disabled) { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-  .btn-primary { background: var(--navy); color: white; border-color: var(--navy); }
-  .btn-primary:hover:not(:disabled) { background: var(--navy-light); }
-
-  .btn-record { background: var(--red); color: white; border-color: var(--red); }
-  .btn-record:hover:not(:disabled) { background: var(--red-light); }
-
-  .btn-success { background: var(--green); color: white; border-color: var(--green); }
-  .btn-success:hover:not(:disabled) { background: #2ecc71; }
-
-  /* Status */
-  .status-box {
-    background: var(--bg);
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
-    min-height: 40px;
-  }
-
-  .status-box.success { color: var(--green); background: #eafaf1; }
-  .status-box.error { color: var(--red); background: #fdecea; }
-  .status-box.processing { color: var(--navy); background: #eef2fa; }
-
-  /* Audio player */
-  .audio-wrap { margin-top: 12px; display: none; }
-  .audio-wrap.visible { display: block; }
-  .audio-wrap label { font-size: 11px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-  audio { width: 100%; border-radius: 6px; }
-
-  /* Transcript preview */
-  .transcript-wrap { margin-top: 12px; display: none; }
-  .transcript-wrap.visible { display: block; }
-  .transcript-wrap label { font-size: 11px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .transcript-text {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--text);
-    font-style: italic;
-  }
-
-  /* Divider */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
-
-  /* Spinner */
-  .spinner {
-    display: inline-block;
-    width: 14px; height: 14px;
-    border: 2px solid rgba(30,66,114,0.2);
-    border-top-color: var(--navy);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Instructions callout */
-  .callout {
-    background: #eef2fa;
-    border-left: 3px solid var(--navy);
-    border-radius: 0 6px 6px 0;
-    padding: 10px 14px;
-    font-size: 13px;
-    color: var(--navy-dark);
-    line-height: 1.6;
-  }
-
-  .version { text-align: center; font-size: 11px; color: var(--text-muted); padding: 8px; opacity: 0.5; }
+/* SPINNER */
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(30,66,114,0.2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
 </style>
 </head>
 <body>
 
-<header>
-  <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-    <circle cx="12" cy="12" r="10"/><path d="M12 6v6.5l3 2" stroke-linecap="round"/>
-  </svg>
-  <div>
-    <h1>Spreken A2 — Opname</h1>
-    <div class="subtitle">Inburgeringsexamen oefentrainer</div>
+<header class="app-header">
+  <div class="header-left">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"/><path d="M12 6v6.5l3 2" stroke-linecap="round"/>
+    </svg>
+    <div class="header-title">Spreken A2 Oefenexamen</div>
+  </div>
+  <div class="header-right">
+    <span class="header-score" id="headerScore" style="display:none;"></span>
+    <button class="btn-header" id="btnProgress" onclick="showProgress()" style="display:none;">📊 Voortgang</button>
+    <button class="btn-header" id="btnLogout" onclick="logout()" style="display:none;">Uitloggen</button>
   </div>
 </header>
 
-<main>
-
-  <!-- Setup -->
-  <div class="setup-panel" id="setupPanel">
-    <h2>Sessie instellen</h2>
-    <div class="field">
-      <label>Anthropic API-sleutel</label>
-      <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
-    </div>
-    <div class="field">
-      <label>Wie oefent er vandaag?</label>
-      <select id="userName">
-        <option value="">— Kies —</option>
-        <option value="Marshall">Marshall</option>
-        <option value="Suna">Suna</option>
-      </select>
-    </div>
-    <div style="margin-top:4px;">
-      <button class="btn btn-primary" onclick="startSession()">Start sessie</button>
-    </div>
-  </div>
-
-  <!-- Question info -->
-  <div class="question-card" id="questionCard">
-    <div class="question-meta">
-      <span class="part-badge" id="partBadge">Deel 1</span>
-      <span class="q-counter" id="qCounter">Vraag 1 van 16</span>
-    </div>
-    <div class="callout" id="questionInstruction">
-      Bekijk de vraag in het Claude-venster en luister naar de vraag. Druk dan op <strong>Start opname</strong> als u klaar bent om te antwoorden.
-    </div>
-  </div>
-
-  <!-- Recording panel -->
-  <div class="recording-panel" id="recordingPanel">
-
-    <div class="timer-row">
-      <div class="rec-dot" id="recDot"></div>
-      <div class="timer-bar-wrap">
-        <div class="timer-bar" id="timerBar"></div>
+<!-- LOGIN -->
+<div class="screen active" id="screenLogin">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h2>Welkom</h2>
+      <p>Kies uw naam en voer uw wachtwoord in om te beginnen.</p>
+      <div class="user-btns">
+        <button class="user-btn" id="btnMarshall" onclick="selectUser('Marshall')">Marshall</button>
+        <button class="user-btn" id="btnSuna" onclick="selectUser('Suna')">Suna</button>
       </div>
-      <div class="timer-text" id="timerText">00:00</div>
+      <div class="field">
+        <label>Wachtwoord</label>
+        <input type="password" id="passwordInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+      </div>
+      <div class="error-msg" id="loginError">Verkeerd wachtwoord. Probeer opnieuw.</div>
+      <button class="btn btn-primary" style="width:100%;" onclick="login()">Inloggen</button>
     </div>
-
-    <div class="btn-row" id="btnRow">
-      <button class="btn btn-record" id="btnStart" onclick="startRecording()">▶ Start opname</button>
-      <button class="btn" id="btnStop" onclick="stopRecording()" disabled>◼ Stop opname</button>
-    </div>
-
-    <div class="audio-wrap" id="audioWrap">
-      <label>Uw opname</label>
-      <audio id="audioPlayer" controls></audio>
-    </div>
-
-    <div class="btn-row" id="reviewBtnRow" style="display:none;">
-      <button class="btn" onclick="reRecord()">↺ Opnieuw opnemen</button>
-      <button class="btn btn-success" onclick="submitAnswer()">✓ Antwoord indienen</button>
-    </div>
-
-    <hr class="divider" style="margin: 12px 0;">
-    <div class="status-box" id="statusBox">Druk op <strong>Start opname</strong> om te beginnen.</div>
-
-    <div class="transcript-wrap" id="transcriptWrap">
-      <label>Transcript (verzonden naar Claude)</label>
-      <div class="transcript-text" id="transcriptText"></div>
-    </div>
-
-    <div class="btn-row" id="nextBtnRow" style="display:none; margin-top:12px;">
-      <button class="btn btn-primary" onclick="nextQuestion()">Volgende vraag →</button>
-    </div>
-
   </div>
+</div>
 
-  <div class="version">Spreken A2 Tutor v1.0 — mvanbeurden.github.io/spreken-a2-tutor</div>
+<!-- HOME -->
+<div class="screen" id="screenHome">
+  <div class="home-wrap">
+    <div class="home-greeting" id="homeGreeting">Goedemiddag!</div>
+    <div class="home-sub" id="homeSub"></div>
+    <div class="verdict-card">
+      <div class="verdict-icon" id="verdictIcon">🔴</div>
+      <div class="verdict-text">
+        <h3 id="verdictTitle">Nog niet klaar / Not yet ready</h3>
+        <p id="verdictDesc">Eerste sessie — nog geen geschiedenis.</p>
+      </div>
+    </div>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="startMode('full')">
+        <h3>Volledig examen</h3>
+        <p>Alle 16 vragen over 4 delen. Volledige examensimulatie van 35 minuten.</p>
+      </div>
+      <div class="mode-card" onclick="showPartSelect()">
+        <h3>Gericht oefenen</h3>
+        <p>Kies één of meer delen om op te focussen. Minimaal 4 vragen.</p>
+      </div>
+      <div class="mode-card" onclick="showCriterionSelect()">
+        <h3>Criterium drill</h3>
+        <p>Focus op één zwak criterium: grammatica, woordenschat, coherentie, en meer.</p>
+      </div>
+    </div>
+    <div class="sub-select" id="partSelectWrap">
+      <p>Kies deel(en):</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <button class="btn" id="pDeel1" onclick="togglePart(1)">Deel 1</button>
+        <button class="btn" id="pDeel2" onclick="togglePart(2)">Deel 2</button>
+        <button class="btn" id="pDeel3" onclick="togglePart(3)">Deel 3</button>
+        <button class="btn" id="pDeel4" onclick="togglePart(4)">Deel 4</button>
+      </div>
+      <button class="btn btn-primary" onclick="startTargeted()">Start gericht oefenen</button>
+    </div>
+    <div class="sub-select" id="criterionSelectWrap">
+      <p>Kies criterium:</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <button class="btn" onclick="startCriterionDrill('adequaatheid')">Adequaatheid</button>
+        <button class="btn" onclick="startCriterionDrill('woordenschat')">Woordenschat</button>
+        <button class="btn" onclick="startCriterionDrill('grammatica')">Grammatica</button>
+        <button class="btn" onclick="startCriterionDrill('vloeiendheid')">Vloeiendheid</button>
+        <button class="btn" onclick="startCriterionDrill('coherentie')">Coherentie</button>
+        <button class="btn" onclick="startCriterionDrill('uitspraak')">Uitspraak</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-</main>
+<!-- EXAM -->
+<div class="screen" id="screenExam">
+  <div class="exam-wrap">
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="part-badge" id="examPartBadge">Deel 1</span>
+        <span class="q-counter" id="examQCounter">Vraag 1 van 16</span>
+      </div>
+      <div class="q-context" id="examContext"></div>
+      <div class="video-wrap" id="videoWrap">
+        <video id="examVideo" controls>
+          <source id="examVideoSrc" src="" type="video/mp4">
+        </video>
+      </div>
+      <div class="photos-wrap" id="photosWrap"></div>
+      <div class="q-text" id="examQText"></div>
+      <div class="q-instruction" id="examInstruction"></div>
+    </div>
+
+    <div class="recording-panel">
+      <div class="timer-row">
+        <div class="rec-dot" id="recDot"></div>
+        <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar"></div></div>
+        <div class="timer-text" id="timerText">00:00</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-record" id="btnStart" onclick="startRecording()">▶ Start opname</button>
+        <button class="btn" id="btnStop" onclick="stopRecording()" disabled>◼ Stop opname</button>
+      </div>
+      <div class="audio-wrap" id="audioWrap">
+        <label>Uw opname</label>
+        <audio id="audioPlayer" controls></audio>
+      </div>
+      <div class="btn-row" id="reviewBtnRow" style="display:none;">
+        <button class="btn" onclick="reRecord()">↺ Opnieuw opnemen</button>
+        <button class="btn btn-success" onclick="submitAnswer()">✓ Antwoord indienen</button>
+      </div>
+      <div class="status-box" id="statusBox">Bekijk de vraag en druk op <strong>Start opname</strong> als u klaar bent.</div>
+    </div>
+
+    <div class="feedback-card" id="feedbackCard" style="display:none;"></div>
+
+    <div class="nav-row">
+      <button class="btn" id="btnPrev" onclick="prevQuestion()" disabled>← Vorige vraag</button>
+      <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()">Volgende vraag →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="screen" id="screenProgress">
+  <div class="progress-wrap">
+    <h2 id="progressTitle">Voortgang</h2>
+    <div class="stat-grid" id="progressStats"></div>
+    <div style="margin-bottom:24px;">
+      <div class="section-title">Gemiddelde per criterium</div>
+      <div id="criterionBars"></div>
+    </div>
+    <div style="margin-bottom:24px;">
+      <div class="section-title">Sessiegeschiedenis</div>
+      <table class="history-table">
+        <thead><tr><th>Datum</th><th>Modus</th><th>Score</th><th>Resultaat</th></tr></thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="downloadProgress()">Download voortgangsrapport</button>
+      <button class="btn" onclick="backFromProgress()">← Terug</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="screen" id="screenSummary">
+  <div class="summary-wrap">
+    <h2>Sessie voltooid</h2>
+    <div class="sub" id="summarySubtitle"></div>
+    <div id="summaryContent"></div>
+    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="goHome()">Terug naar home</button>
+      <button class="btn" onclick="downloadProgress()">Download rapport</button>
+    </div>
+  </div>
+</div>
 
 <script>
-  // ── State ─────────────────────────────────────────────────────────────────
-  let API_KEY = '';
-  let USER_NAME = '';
-  let stream = null;
-  let recorder = null;
-  let audioChunks = [];
-  let audioBlob = null;
-  let timerInterval = null;
-  let elapsed = 0;
-  const MAX_SECONDS = 60;
+// ── CONSTANTS ─────────────────────────────────────────
+const PASSWORD_HASH = 'c2ea025a511224ac6bd874503f496f9d5e431bc7d4ecc95faeab703a1294cb43';
+const USERS = { Marshall: {}, Suna: {} };
+const UNSPLASH_KEY = '151IOPyzRgpP6fE6Gw678PShkGgEnhzRfWcVN-CGCzk';
+const ANTHROPIC_MODEL = 'claude-sonnet-4-20250514';
+const GITHUB_QUESTIONS_JSON = 'https://raw.githubusercontent.com/mvanbeurden/spreken-a2-tutor/main/videos/questions.json';
+const GITHUB_VIDEO_BASE = 'https://raw.githubusercontent.com/mvanbeurden/spreken-a2-tutor/main/videos/';
+const PARTS = [
+  { id:1, label:'Deel 1', type:'video',  count:4, instruction:'Beantwoord de vraag van de persoon in de video.' },
+  { id:2, label:'Deel 2', type:'photo1', count:4, instruction:'Gebruik het plaatje.' },
+  { id:3, label:'Deel 3', type:'photo2', count:4, instruction:'Kies één van de plaatjes.' },
+  { id:4, label:'Deel 4', type:'photo3', count:4, instruction:'Gebruik alle plaatjes.' },
+];
+const CRITERIA = ['adequaatheid','woordenschat','grammatica','vloeiendheid','coherentie','uitspraak'];
+const MAX_PER_Q = 12;
+const PASS_PER_Q = 7.2;
+const MAX_SECS = 60;
+const UNSPLASH_TOPICS = [
+  'Dutch everyday life','European workplace office','school classroom Netherlands',
+  'supermarket shopping Netherlands','public transport bus train Netherlands',
+  'home interior living room','park outdoor Netherlands','cafe coffee shop'
+];
 
-  // Question tracking
-  const PARTS = [
-    { label: 'Deel 1', count: 4 },
-    { label: 'Deel 2', count: 4 },
-    { label: 'Deel 3', count: 4 },
-    { label: 'Deel 4', count: 4 },
-  ];
-  let currentPart = 0;
-  let currentQ = 0;
-  let totalAnswered = 0;
-  const TOTAL = 16;
+// ── STATE ─────────────────────────────────────────────
+let currentUser = null, currentApiKey = null, currentPassword = null;
+let sessionMode = 'full', sessionParts = [1,2,3,4], sessionFocusCriterion = null;
+let questions = [], currentQIdx = 0, answers = [];
+let stream = null, recorder = null, audioChunks = [], audioBlob = null;
+let timerInterval = null, elapsed = 0;
+let videoQuestions = [], selectedParts = [], previousScreen = 'screenHome';
 
-  // ── Session start ─────────────────────────────────────────────────────────
-  async function startSession() {
-    API_KEY = document.getElementById('apiKey').value.trim();
-    USER_NAME = document.getElementById('userName').value;
-    if (!API_KEY) { alert('Voer uw Anthropic API-sleutel in.'); return; }
-    if (!USER_NAME) { alert('Kies wie er oefent.'); return; }
+// ── AUTH ──────────────────────────────────────────────
+function selectUser(name) {
+  currentUser = name;
+  document.getElementById('btnMarshall').classList.toggle('selected', name === 'Marshall');
+  document.getElementById('btnSuna').classList.toggle('selected', name === 'Suna');
+}
 
-    // Request mic upfront
+async function login() {
+  if (!currentUser) { showErr('Kies eerst uw naam.'); return; }
+  const pw = document.getElementById('passwordInput').value;
+  if (!pw) { showErr('Voer uw wachtwoord in.'); return; }
+  const hash = await sha256(pw);
+  if (hash !== PASSWORD_HASH) { showErr('Verkeerd wachtwoord. Probeer opnieuw.'); return; }
+  document.getElementById('loginError').style.display = 'none';
+
+  // Try to load encrypted API key from localStorage
+  const stored = localStorage.getItem(currentUser.toLowerCase() + '_apikey');
+  if (stored) {
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-    } catch (err) {
-      alert('Microfoon toegang geweigerd: ' + err.message + '\n\nZorg dat u microfoontoestemming geeft in uw browser.');
-      return;
+      currentApiKey = await decryptKey(stored, pw);
+    } catch(e) {
+      // Decryption failed — key may be corrupted, ask user to re-enter
+      currentApiKey = null;
     }
-
-    document.getElementById('setupPanel').style.display = 'none';
-    document.getElementById('questionCard').classList.add('visible');
-    document.getElementById('recordingPanel').classList.add('visible');
-    updateQuestionDisplay();
   }
 
-  // ── Question display ──────────────────────────────────────────────────────
-  function updateQuestionDisplay() {
-    const part = PARTS[currentPart];
-    document.getElementById('partBadge').textContent = part.label;
-    document.getElementById('qCounter').textContent =
-      'Vraag ' + (totalAnswered + 1) + ' van ' + TOTAL +
-      ' (' + part.label + ', vraag ' + (currentQ + 1) + ' van ' + part.count + ')';
+  if (!currentApiKey) {
+    // No key stored yet (or decryption failed) — show first-time setup
+    currentPassword = pw;
+    showScreen('screenApiSetup');
+    document.getElementById('apiSetupUser').textContent = currentUser;
+    return;
   }
 
-  // ── Recording ─────────────────────────────────────────────────────────────
-  function startRecording() {
-    audioChunks = [];
-    audioBlob = null;
-    elapsed = 0;
+  document.getElementById('btnProgress').style.display = 'inline-block';
+  document.getElementById('btnLogout').style.display = 'inline-block';
+  showHome();
+}
 
-    // Reset UI
-    document.getElementById('audioWrap').classList.remove('visible');
-    document.getElementById('transcriptWrap').classList.remove('visible');
-    document.getElementById('reviewBtnRow').style.display = 'none';
-    document.getElementById('nextBtnRow').style.display = 'none';
-    document.getElementById('timerBar').style.width = '0%';
-    document.getElementById('timerBar').className = 'timer-bar';
-    setStatus('Aan het opnemen... Spreek nu uw antwoord in.', '');
+async function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('sk-ant-')) { document.getElementById('apiSetupError').style.display='block'; return; }
+  document.getElementById('apiSetupError').style.display = 'none';
+  const encrypted = await encryptKey(key, currentPassword);
+  localStorage.setItem(currentUser.toLowerCase() + '_apikey', encrypted);
+  currentApiKey = key;
+  currentPassword = null;
+  document.getElementById('btnProgress').style.display = 'inline-block';
+  document.getElementById('btnLogout').style.display = 'inline-block';
+  showHome();
+}
 
-    recorder = new MediaRecorder(stream);
-    recorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-    recorder.onstop = onRecordingStop;
-    recorder.start();
+function showErr(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = msg; el.style.display = 'block';
+}
 
-    document.getElementById('recDot').classList.add('active');
-    document.getElementById('btnStart').disabled = true;
-    document.getElementById('btnStop').disabled = false;
+function logout() {
+  currentUser = null; currentApiKey = null; currentPassword = null;
+  document.getElementById('btnProgress').style.display = 'none';
+  document.getElementById('btnLogout').style.display = 'none';
+  document.getElementById('headerScore').style.display = 'none';
+  document.getElementById('passwordInput').value = '';
+  document.getElementById('apiKeyInput').value = '';
+  document.getElementById('btnMarshall').classList.remove('selected');
+  document.getElementById('btnSuna').classList.remove('selected');
+  showScreen('screenLogin');
+}
 
-    timerInterval = setInterval(() => {
-      elapsed++;
-      const pct = (elapsed / MAX_SECONDS) * 100;
-      const bar = document.getElementById('timerBar');
-      bar.style.width = Math.min(pct, 100) + '%';
-      if (pct >= 80) bar.className = 'timer-bar warning';
-      if (pct >= 100) bar.className = 'timer-bar full';
-      const m = Math.floor(elapsed / 60);
-      const s = elapsed % 60;
-      document.getElementById('timerText').textContent =
-        String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-      if (elapsed >= MAX_SECONDS) stopRecording();
-    }, 1000);
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function deriveKey(password, salt) {
+  const keyMaterial = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+    keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+  );
+}
+
+async function encryptKey(apiKey, password) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(password, salt);
+  const enc = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(apiKey));
+  // Pack salt + iv + ciphertext into base64
+  const combined = new Uint8Array(salt.length + iv.length + enc.byteLength);
+  combined.set(salt, 0); combined.set(iv, 16); combined.set(new Uint8Array(enc), 28);
+  return btoa(String.fromCharCode(...combined));
+}
+
+async function decryptKey(stored, password) {
+  const combined = new Uint8Array(atob(stored).split('').map(c => c.charCodeAt(0)));
+  const salt = combined.slice(0, 16);
+  const iv = combined.slice(16, 28);
+  const ciphertext = combined.slice(28);
+  const key = await deriveKey(password, salt);
+  const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
+  return new TextDecoder().decode(dec);
+}
+
+// ── NAVIGATION ────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showHome() {
+  previousScreen = 'screenHome';
+  loadHomeData();
+  showScreen('screenHome');
+}
+
+function goHome() {
+  stopAll();
+  showHome();
+}
+
+function showProgress() {
+  previousScreen = document.querySelector('.screen.active')?.id || 'screenHome';
+  renderProgress();
+  showScreen('screenProgress');
+}
+
+function backFromProgress() { showScreen(previousScreen); }
+
+// ── HOME ──────────────────────────────────────────────
+function loadHomeData() {
+  const h = new Date().getHours();
+  document.getElementById('homeGreeting').textContent =
+    (h<12?'Goedemorgen':h<18?'Goedemiddag':'Goedenavond') + ', ' + currentUser + '!';
+  const prog = loadProgress();
+  if (prog.sessions.length) {
+    const last = prog.sessions[prog.sessions.length-1];
+    document.getElementById('homeSub').textContent = `Laatste sessie: ${last.date} — ${last.totalScore}/${last.maxScore} punten`;
+    const avg = avgScore(prog);
+    let icon, title, desc;
+    if (avg >= 115.2/192) { icon='🟢'; title='Klaar voor het examen / Ready'; desc='Uw gemiddelde is boven de slagingsgrens.'; }
+    else if (avg >= 80/192) { icon='🟡'; title='Op weg / Approaching'; desc='U maakt goede voortgang richting de slagingsgrens.'; }
+    else { icon='🔴'; title='Nog niet klaar / Not yet ready'; desc='Blijf oefenen — elke sessie telt!'; }
+    document.getElementById('verdictIcon').textContent = icon;
+    document.getElementById('verdictTitle').textContent = title;
+    document.getElementById('verdictDesc').textContent = desc;
+  } else {
+    document.getElementById('homeSub').textContent = 'Eerste sessie — nog geen geschiedenis.';
   }
+  document.getElementById('partSelectWrap').style.display = 'none';
+  document.getElementById('criterionSelectWrap').style.display = 'none';
+}
 
-  function stopRecording() {
-    clearInterval(timerInterval);
-    if (recorder && recorder.state !== 'inactive') recorder.stop();
-    document.getElementById('recDot').classList.remove('active');
-    document.getElementById('btnStop').disabled = true;
+function avgScore(prog) {
+  if (!prog.sessions.length) return 0;
+  const r = prog.sessions.slice(-5);
+  return r.reduce((s,x) => s + x.totalScore/x.maxScore, 0) / r.length;
+}
+
+function showPartSelect() {
+  selectedParts = [];
+  [1,2,3,4].forEach(i => document.getElementById('pDeel'+i).classList.remove('btn-primary'));
+  document.getElementById('partSelectWrap').style.display = 'block';
+  document.getElementById('criterionSelectWrap').style.display = 'none';
+}
+
+function showCriterionSelect() {
+  document.getElementById('criterionSelectWrap').style.display = 'block';
+  document.getElementById('partSelectWrap').style.display = 'none';
+}
+
+function togglePart(n) {
+  const i = selectedParts.indexOf(n);
+  if (i===-1) selectedParts.push(n); else selectedParts.splice(i,1);
+  document.getElementById('pDeel'+n).classList.toggle('btn-primary', selectedParts.includes(n));
+}
+
+function startTargeted() {
+  if (!selectedParts.length) { alert('Kies minimaal één deel.'); return; }
+  sessionParts = [...selectedParts].sort();
+  beginSession('targeted');
+}
+
+function startCriterionDrill(criterion) {
+  sessionFocusCriterion = criterion;
+  sessionParts = [1,2,3,4];
+  beginSession('criterion');
+}
+
+// ── SESSION START ─────────────────────────────────────
+async function startMode(mode) {
+  sessionMode = mode;
+  sessionFocusCriterion = null;
+  sessionParts = [1,2,3,4];
+  beginSession(mode);
+}
+
+async function beginSession(mode) {
+  sessionMode = mode;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+  } catch(e) {
+    alert('Microfoon toegang geweigerd: ' + e.message + '\n\nGeef microfoontoestemming in uw browser en probeer opnieuw.');
+    return;
   }
-
-  function onRecordingStop() {
-    audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-    const url = URL.createObjectURL(audioBlob);
-    document.getElementById('audioPlayer').src = url;
-    document.getElementById('audioWrap').classList.add('visible');
-    document.getElementById('reviewBtnRow').style.display = 'flex';
-    document.getElementById('btnStart').disabled = false;
-    setStatus('Opname klaar. Beluister uw antwoord, neem opnieuw op, of dien het in.', '');
+  try {
+    const r = await fetch(GITHUB_QUESTIONS_JSON);
+    videoQuestions = await r.json();
+  } catch(e) {
+    videoQuestions = [{
+      filename: 'deel1_001.mp4',
+      context: 'Ik maak graag huiswerk op mijn slaapkamer.',
+      question: 'Waar maakt u graag huiswerk?',
+      followup: 'Vertel ook waarom.'
+    }];
   }
+  buildQuestionList();
+  currentQIdx = 0;
+  answers = new Array(questions.length).fill(null);
+  updateHeaderScore();
+  showScreen('screenExam');
+  loadQuestion(0);
+}
 
-  function reRecord() {
-    audioBlob = null;
-    audioChunks = [];
-    document.getElementById('audioWrap').classList.remove('visible');
-    document.getElementById('reviewBtnRow').style.display = 'none';
-    document.getElementById('transcriptWrap').classList.remove('visible');
-    document.getElementById('timerBar').style.width = '0%';
-    document.getElementById('timerBar').className = 'timer-bar';
-    document.getElementById('timerText').textContent = '00:00';
-    setStatus('Druk op <strong>Start opname</strong> om opnieuw op te nemen.', '');
-  }
-
-  // ── Submit & transcribe ───────────────────────────────────────────────────
-  async function submitAnswer() {
-    if (!audioBlob) { alert('Geen opname gevonden.'); return; }
-    document.getElementById('reviewBtnRow').style.display = 'none';
-    document.getElementById('btnStart').disabled = true;
-    setStatus('<span class="spinner"></span>Antwoord wordt verwerkt en getranscribeerd...', 'processing');
-
-    try {
-      // Convert blob to base64
-      const base64Audio = await blobToBase64(audioBlob);
-      const base64Data = base64Audio.split(',')[1];
-
-      // Send to Anthropic API for transcription
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-calls': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text: 'This is a Dutch language exam response audio recording. Please transcribe it accurately in Dutch. Return ONLY the transcription text, nothing else — no preamble, no explanation, no quotation marks.'
-              },
-              {
-                type: 'document',
-                source: {
-                  type: 'base64',
-                  media_type: 'audio/webm',
-                  data: base64Data
-                }
-              }
-            ]
-          }]
-        })
-      });
-
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error?.message || 'API fout: ' + response.status);
+function buildQuestionList() {
+  questions = [];
+  const used = [];
+  for (const pid of sessionParts) {
+    const part = PARTS[pid-1];
+    for (let i = 0; i < part.count; i++) {
+      if (part.type === 'video') {
+        const vq = pickVideo(used);
+        used.push(vq?.filename);
+        questions.push({ part: pid, type: 'video', videoQ: vq, photos: null, questionText: null });
+      } else {
+        questions.push({ part: pid, type: part.type, videoQ: null, photos: null, questionText: null });
       }
+    }
+  }
+}
 
-      const data = await response.json();
-      const transcript = data.content?.[0]?.text?.trim();
+function pickVideo(used) {
+  const avail = videoQuestions.filter(v => !used.includes(v.filename));
+  const pool = avail.length ? avail : videoQuestions;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
 
-      if (!transcript) throw new Error('Geen transcript ontvangen.');
+// ── QUESTION LOADING ──────────────────────────────────
+async function loadQuestion(idx) {
+  currentQIdx = idx;
+  const q = questions[idx];
+  const part = PARTS[q.part-1];
+  const partQ = questions.slice(0,idx).filter(x => x.part===q.part).length + 1;
 
-      // Show transcript
-      document.getElementById('transcriptText').textContent = transcript;
-      document.getElementById('transcriptWrap').classList.add('visible');
-      setStatus('Transcript klaar. Verzonden naar Claude voor beoordeling.', 'success');
+  document.getElementById('examPartBadge').textContent = part.label;
+  document.getElementById('examQCounter').textContent =
+    `Vraag ${idx+1} van ${questions.length} (${part.label} · ${partQ} van ${part.count})`;
+  document.getElementById('examInstruction').textContent = part.instruction;
+  document.getElementById('btnPrev').disabled = idx === 0;
+  document.getElementById('btnNext').textContent = idx === questions.length-1 ? 'Sessie afronden' : 'Volgende vraag →';
 
-      // Send to Claude via sendPrompt
-      const partLabel = PARTS[currentPart].label.toUpperCase().replace(' ', '_');
-      sendToClaudeChat('[ANTWOORD] ' + transcript);
+  document.getElementById('videoWrap').style.display = 'none';
+  document.getElementById('photosWrap').style.display = 'none';
+  document.getElementById('feedbackCard').style.display = 'none';
+  resetRecordingUI();
 
-      // Show next button
-      document.getElementById('nextBtnRow').style.display = 'flex';
+  if (q.type === 'video') await loadVideoQ(q);
+  else await loadPhotoQ(q);
 
-    } catch (err) {
-      setStatus('Fout bij verwerking: ' + err.message, 'error');
-      document.getElementById('reviewBtnRow').style.display = 'flex';
-      document.getElementById('btnStart').disabled = false;
+  if (answers[idx]) renderFeedback(idx);
+}
+
+async function loadVideoQ(q) {
+  const vq = q.videoQ;
+  if (!vq) { setStatus('Geen video beschikbaar.','error'); return; }
+  document.getElementById('examContext').textContent = vq.context;
+  document.getElementById('examQText').textContent = vq.question + ' ' + vq.followup;
+  document.getElementById('examVideoSrc').src = GITHUB_VIDEO_BASE + vq.filename;
+  document.getElementById('examVideo').load();
+  document.getElementById('videoWrap').style.display = 'block';
+  document.getElementById('examVideo').play().catch(()=>{});
+}
+
+async function loadPhotoQ(q) {
+  document.getElementById('examContext').textContent = '';
+  document.getElementById('examQText').textContent = 'Vraag wordt geladen...';
+  const count = q.type==='photo1'?1:q.type==='photo2'?2:3;
+  const wrap = document.getElementById('photosWrap');
+  wrap.className = 'photos-wrap' + (count===1?' single':count===3?' triple':'');
+  wrap.style.display = 'flex';
+  wrap.innerHTML = '';
+  for (let i=0;i<count;i++) {
+    const ph = document.createElement('div');
+    ph.className = 'photo-placeholder';
+    ph.innerHTML = '<span class="spinner"></span>';
+    wrap.appendChild(ph);
+  }
+
+  if (!q.photos) {
+    const topic = UNSPLASH_TOPICS[Math.floor(Math.random()*UNSPLASH_TOPICS.length)];
+    const urls = [];
+    for (let i=0;i<count;i++) {
+      try {
+        const r = await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(topic)}&orientation=landscape&client_id=${UNSPLASH_KEY}`);
+        const d = await r.json();
+        urls.push(d.urls?.regular||'');
+      } catch(e) { urls.push(''); }
+    }
+    q.photos = urls;
+
+    const partDesc = q.type==='photo1'?'Deel 2 (1 foto)':q.type==='photo2'?'Deel 3 (2 fotos, kies er één)':'Deel 4 (3 fotos, vertel over elk)';
+    const focusNote = sessionFocusCriterion ? `\nThis is a criterion drill focused on: ${sessionFocusCriterion}. Design the question to naturally elicit that skill.` : '';
+    const prompt = `Generate a Dutch A2 inburgering Spreken exam question for ${partDesc}.
+The photo(s) show: "${topic}" in an everyday Dutch/European context.${focusNote}
+
+Return ONLY valid JSON:
+{"context":"short Dutch context sentence","question":"twofold Dutch question","followup":"short Dutch follow-up instruction"}
+
+Rules: A2 vocabulary, answerable in 1 minute, realistic everyday situation.
+For Deel 3: ask candidate to choose one photo and explain why.
+For Deel 4: ask candidate to say something about each photo.`;
+
+    try {
+      const resp = await callAnthropic([{role:'user',content:prompt}], 300);
+      const raw = resp.content?.[0]?.text||'{}';
+      q.questionText = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    } catch(e) {
+      q.questionText = { context:'', question:'Vertel wat u op de foto ziet.', followup:'Vertel ook wat u daarvan vindt.' };
     }
   }
 
-  // ── Navigation ────────────────────────────────────────────────────────────
-  function nextQuestion() {
-    totalAnswered++;
-    currentQ++;
-    if (currentQ >= PARTS[currentPart].count) {
-      currentPart++;
-      currentQ = 0;
-    }
+  wrap.innerHTML = '';
+  q.photos.forEach(url => {
+    const img = document.createElement('img');
+    img.src = url; img.alt = 'Examenfoto';
+    wrap.appendChild(img);
+  });
 
-    if (totalAnswered >= TOTAL) {
-      endSession();
-      return;
-    }
+  if (q.questionText) {
+    document.getElementById('examContext').textContent = q.questionText.context||'';
+    document.getElementById('examQText').textContent = (q.questionText.question||'') + ' ' + (q.questionText.followup||'');
+  }
+}
 
-    // Reset recording UI
-    reRecord();
-    document.getElementById('nextBtnRow').style.display = 'none';
-    document.getElementById('transcriptWrap').classList.remove('visible');
-    updateQuestionDisplay();
+// ── RECORDING ─────────────────────────────────────────
+function resetRecordingUI() {
+  clearInterval(timerInterval); elapsed = 0; audioBlob = null; audioChunks = [];
+  document.getElementById('recDot').classList.remove('active');
+  document.getElementById('timerBar').style.width='0%';
+  document.getElementById('timerBar').className='timer-bar';
+  document.getElementById('timerText').textContent='00:00';
+  document.getElementById('btnStart').disabled=false;
+  document.getElementById('btnStop').disabled=true;
+  document.getElementById('reviewBtnRow').style.display='none';
+  document.getElementById('audioWrap').classList.remove('visible');
+  setStatus('Bekijk de vraag en druk op <strong>Start opname</strong> als u klaar bent.','');
+}
 
-    // Notify Claude of new question part
-    const partNum = currentPart + 1;
-    setStatus('Bekijk de volgende vraag in het Claude-venster. Druk op <strong>Start opname</strong> als u klaar bent.', '');
+function startRecording() {
+  audioChunks=[]; audioBlob=null;
+  playBeep(880,0.15);
+  recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = e => { if(e.data.size>0) audioChunks.push(e.data); };
+  recorder.onstop = onStop;
+  recorder.start();
+  elapsed=0;
+  document.getElementById('recDot').classList.add('active');
+  document.getElementById('btnStart').disabled=true;
+  document.getElementById('btnStop').disabled=false;
+  document.getElementById('reviewBtnRow').style.display='none';
+  document.getElementById('audioWrap').classList.remove('visible');
+  setStatus('Aan het opnemen... Spreek nu uw antwoord in.','');
+  timerInterval = setInterval(()=>{
+    elapsed++;
+    const pct = (elapsed/MAX_SECS)*100;
+    const bar = document.getElementById('timerBar');
+    bar.style.width = Math.min(pct,100)+'%';
+    bar.className = 'timer-bar'+(pct>=100?' danger':pct>=80?' warning':'');
+    const m=Math.floor(elapsed/60),s=elapsed%60;
+    document.getElementById('timerText').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if(elapsed>=MAX_SECS) stopRecording();
+  },1000);
+}
+
+function stopRecording() {
+  clearInterval(timerInterval);
+  playBeep(440,0.25);
+  document.getElementById('recDot').classList.remove('active');
+  document.getElementById('btnStop').disabled=true;
+  if(recorder&&recorder.state!=='inactive') recorder.stop();
+}
+
+function onStop() {
+  audioBlob = new Blob(audioChunks,{type:'audio/webm'});
+  document.getElementById('audioPlayer').src = URL.createObjectURL(audioBlob);
+  document.getElementById('audioWrap').classList.add('visible');
+  document.getElementById('reviewBtnRow').style.display='flex';
+  document.getElementById('btnStart').disabled=false;
+  setStatus('Opname klaar. Beluister uw antwoord, neem opnieuw op, of dien het in.','');
+}
+
+function reRecord() {
+  audioBlob=null; audioChunks=[];
+  document.getElementById('audioWrap').classList.remove('visible');
+  document.getElementById('reviewBtnRow').style.display='none';
+  document.getElementById('timerBar').style.width='0%';
+  document.getElementById('timerBar').className='timer-bar';
+  document.getElementById('timerText').textContent='00:00';
+  elapsed=0;
+  setStatus('Druk op <strong>Start opname</strong> om opnieuw op te nemen.','');
+}
+
+function stopAll() {
+  clearInterval(timerInterval);
+  if(recorder&&recorder.state!=='inactive') recorder.stop();
+}
+
+// ── SUBMIT & SCORE ────────────────────────────────────
+async function submitAnswer() {
+  if(!audioBlob) return;
+  document.getElementById('reviewBtnRow').style.display='none';
+  document.getElementById('btnStart').disabled=true;
+  setStatus('<span class="spinner"></span>Antwoord wordt getranscribeerd...','processing');
+
+  let transcript='';
+  try {
+    const b64 = (await blobToBase64(audioBlob)).split(',')[1];
+    const tr = await callAnthropic([{role:'user',content:[
+      {type:'text',text:'Transcribe this Dutch audio recording accurately. Return ONLY the transcription text, nothing else.'},
+      {type:'document',source:{type:'base64',media_type:'audio/webm',data:b64}}
+    ]}],500);
+    transcript = tr.content?.[0]?.text?.trim()||'';
+  } catch(e) {
+    setStatus('Fout bij transcriptie: '+e.message,'error');
+    document.getElementById('reviewBtnRow').style.display='flex';
+    document.getElementById('btnStart').disabled=false;
+    return;
   }
 
-  function endSession() {
-    document.getElementById('questionCard').classList.remove('visible');
-    document.getElementById('recordingPanel').classList.remove('visible');
-    const main = document.querySelector('main');
-    const endCard = document.createElement('div');
-    endCard.className = 'setup-panel';
-    endCard.innerHTML = `
-      <h2>Sessie voltooid</h2>
-      <div class="callout" style="margin-top:10px;">
-        Alle ${TOTAL} vragen zijn beantwoord. Ga naar Claude voor de eindbeoordeling en uw voortgangsbestand.
-      </div>
-    `;
-    main.appendChild(endCard);
-    sendToClaudeChat('[SESSIE KLAAR] Alle ' + TOTAL + ' vragen zijn beantwoord door ' + USER_NAME + '. Geef de eindbeoordeling en het voortgangsbestand.');
+  setStatus('<span class="spinner"></span>Antwoord wordt beoordeeld...','processing');
+
+  const q = questions[currentQIdx];
+  let qText = '';
+  if(q.type==='video'&&q.videoQ) qText=q.videoQ.context+' '+q.videoQ.question+' '+q.videoQ.followup;
+  else if(q.questionText) qText=q.questionText.context+' '+q.questionText.question+' '+q.questionText.followup;
+
+  const focusNote = sessionFocusCriterion ? `\nCriterion drill focus: ${sessionFocusCriterion} — give extra detail on this criterion.` : '';
+
+  const scoringPrompt = `Score this Dutch A2 inburgering Spreken exam response.
+
+Question: "${qText}"
+Transcript: "${transcript}"
+${focusNote}
+
+Official DUO rubric:
+1. adequaatheid (0-3): 0=missing/unintelligible/not answering question, 1=imaginable but incomplete, 2=understandable+adequate, 3=clear+excellent. IF 0: all others MUST be 0.
+2. woordenschat (0-2): 0=only basic words insufficient, 1=simple but appropriate, 2=excellent
+3. grammatica (0-2): 0=many errors, 1=quite a few errors, 2=hardly any
+4. vloeiendheid (0-2): 0=not fluent/many pauses, 1=somewhat fluent, 2=fluent
+5. coherentie (0-1): 0=no structure, 1=uses connectors (en/maar/want/omdat) or reference words
+6. uitspraak (0-2): assess from transcript quality. Always note assessed from transcript.
+
+Return ONLY valid JSON (no markdown):
+{"adequaatheid":{"score":N,"en":"comment","nl":"opmerking"},"woordenschat":{"score":N,"en":"comment","nl":"opmerking"},"grammatica":{"score":N,"en":"comment","nl":"opmerking"},"vloeiendheid":{"score":N,"en":"comment","nl":"opmerking"},"coherentie":{"score":N,"en":"comment","nl":"opmerking"},"uitspraak":{"score":N,"en":"comment","nl":"opmerking"},"went_well_en":"...","went_well_nl":"...","improve_en":"...","improve_nl":"..."}`;
+
+  let scores=null;
+  try {
+    const sr = await callAnthropic([{role:'user',content:scoringPrompt}],800);
+    scores = JSON.parse((sr.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
+  } catch(e) {
+    setStatus('Fout bij beoordeling: '+e.message,'error');
+    document.getElementById('reviewBtnRow').style.display='flex';
+    document.getElementById('btnStart').disabled=false;
+    return;
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
-  function setStatus(html, type) {
-    const box = document.getElementById('statusBox');
-    box.innerHTML = html;
-    box.className = 'status-box' + (type ? ' ' + type : '');
-  }
+  const total = CRITERIA.reduce((s,c)=>s+(scores[c]?.score||0),0);
+  answers[currentQIdx] = { transcript, scores, total };
+  updateHeaderScore();
+  renderFeedback(currentQIdx);
+  setStatus('Beoordeeld. Bekijk de feedback hieronder.','success');
+}
 
-  function blobToBase64(blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  }
+function renderFeedback(idx) {
+  const ans = answers[idx];
+  if(!ans) return;
+  const {scores,total} = ans;
+  const pass = total >= PASS_PER_Q;
+  const maxByC = {adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
+  const lbls = {adequaatheid:'Adequacy / Adequaatheid',woordenschat:'Vocabulary / Woordenschat',grammatica:'Grammar / Grammatica',vloeiendheid:'Fluency / Vloeiendheid',coherentie:'Coherence / Coherentie',uitspraak:'Pronunciation / Uitspraak'};
+  const rows = CRITERIA.map(c=>{
+    const sc=scores[c]?.score??0, mx=maxByC[c], r=sc/mx;
+    const cls=r>=0.75?'good':r>=0.4?'mid':'bad';
+    return `<tr><td>${lbls[c]}</td><td><span class="score-val ${cls}">${sc}/${mx}</span></td><td>${scores[c]?.en||''}</td><td>${scores[c]?.nl||''}</td></tr>`;
+  }).join('');
+  const card = document.getElementById('feedbackCard');
+  card.style.display='block';
+  card.innerHTML=`
+    <div class="feedback-header">
+      <span class="feedback-title">Vraag ${idx+1} van ${questions.length} — Beoordeling</span>
+      <span class="feedback-total ${pass?'pass':'fail'}">${total}/${MAX_PER_Q} ${pass?'✓ Geslaagd':'✗ Onder grens'}</span>
+    </div>
+    <table class="score-table">
+      <thead><tr><th>Criterium</th><th>Score</th><th>English</th><th>Nederlands</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <hr class="divider">
+    <div class="feedback-section">
+      <h4>What went well / Wat ging goed</h4>
+      <p class="en">${scores.went_well_en||''}</p>
+      <p class="nl">${scores.went_well_nl||''}</p>
+    </div>
+    <div class="feedback-section">
+      <h4>What to improve / Wat kan beter</h4>
+      <p class="en">${scores.improve_en||''}</p>
+      <p class="nl">${scores.improve_nl||''}</p>
+    </div>`;
+}
 
-  function sendToClaudeChat(text) {
-    // sendPrompt is available when embedded in Claude artifact context
-    // When running standalone (GitHub Pages), open a prompt for the user to copy-paste
-    if (typeof sendPrompt === 'function') {
-      sendPrompt(text);
-    } else {
-      // Standalone fallback — copy to clipboard and show notification
-      navigator.clipboard.writeText(text).catch(() => {});
-      const box = document.getElementById('statusBox');
-      const current = box.innerHTML;
-      box.innerHTML = current + '<br><br><strong>Kopieer naar Claude:</strong><br><code style="font-size:12px;word-break:break-all;">' + text.substring(0, 120) + (text.length > 120 ? '...' : '') + '</code>';
-    }
-  }
+// ── NAVIGATION ────────────────────────────────────────
+function prevQuestion() { if(currentQIdx>0) loadQuestion(currentQIdx-1); }
+function nextQuestion() {
+  if(currentQIdx>=questions.length-1) endSession();
+  else loadQuestion(currentQIdx+1);
+}
+
+// ── SESSION END ───────────────────────────────────────
+function endSession() {
+  stopAll();
+  const answered = answers.filter(Boolean);
+  if(!answered.length){goHome();return;}
+  const totalScore=answered.reduce((s,a)=>s+a.total,0);
+  const maxScore=answered.length*MAX_PER_Q;
+  const passed=totalScore>=(PASS_PER_Q*answered.length);
+  const partScores={};
+  PARTS.forEach(p=>{
+    const pa=questions.map((q,i)=>q.part===p.id?answers[i]:null).filter(Boolean);
+    if(pa.length) partScores['deel'+p.id]=pa.reduce((s,a)=>s+a.total,0)/pa.length;
+  });
+  const critScores={};
+  CRITERIA.forEach(c=>{
+    const vals=answered.map(a=>a.scores[c]?.score??0);
+    critScores[c]=vals.reduce((s,v)=>s+v,0)/vals.length;
+  });
+  const prog=loadProgress();
+  prog.sessions.push({date:new Date().toISOString().split('T')[0],mode:sessionMode,totalScore,maxScore,passed,partScores,criterionScores:critScores});
+  saveProgress(prog);
+  renderSummary(totalScore,maxScore,passed,partScores,critScores);
+  showScreen('screenSummary');
+}
+
+function renderSummary(total,max,passed,partScores,critScores) {
+  document.getElementById('summarySubtitle').textContent=`${total}/${max} punten — ${passed?'✓ Geslaagd':'✗ Onder slagingsgrens'}`;
+  const prog=loadProgress();
+  const avg=avgScore(prog);
+  const verdict=avg>=115.2/192?'🟢 Ready to attempt the exam / Klaar voor het examen':avg>=80/192?'🟡 Approaching / Op weg':'🔴 Not yet ready / Nog niet klaar';
+  const maxByC={adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
+  const partRows=Object.entries(partScores).map(([k,v])=>`<tr><td>${k.replace('deel','Deel ')}</td><td>${v.toFixed(1)}/${MAX_PER_Q}</td><td>${v>=PASS_PER_Q?'✓':'✗'}</td></tr>`).join('');
+  const critRows=CRITERIA.map(c=>{const v=critScores[c]||0,mx=maxByC[c];return`<tr><td style="text-transform:capitalize">${c}</td><td>${v.toFixed(1)}/${mx}</td></tr>`;}).join('');
+  document.getElementById('summaryContent').innerHTML=`
+    <div class="feedback-card" style="margin-bottom:12px;">
+      <div class="feedback-header"><span class="feedback-title">Gereedheidsverdict</span></div>
+      <p style="font-size:14px;font-weight:600;margin-bottom:4px;">${verdict}</p>
+    </div>
+    <div class="feedback-card" style="margin-bottom:12px;">
+      <div class="feedback-title" style="margin-bottom:12px;">Score per deel</div>
+      <table class="score-table"><thead><tr><th>Deel</th><th>Gemiddelde</th><th>Resultaat</th></tr></thead><tbody>${partRows}</tbody></table>
+    </div>
+    <div class="feedback-card">
+      <div class="feedback-title" style="margin-bottom:12px;">Score per criterium</div>
+      <table class="score-table"><thead><tr><th>Criterium</th><th>Gemiddelde</th></tr></thead><tbody>${critRows}</tbody></table>
+    </div>`;
+}
+
+// ── PROGRESS ──────────────────────────────────────────
+function renderProgress() {
+  const prog=loadProgress();
+  document.getElementById('progressTitle').textContent=`Voortgang — ${currentUser}`;
+  const sessions=prog.sessions;
+  const avg=avgScore(prog);
+  const verdict=avg>=115.2/192?'🟢 Klaar':avg>=80/192?'🟡 Op weg':'🔴 Nog niet klaar';
+  const last=sessions.length?sessions[sessions.length-1].totalScore+'/'+sessions[sessions.length-1].maxScore:'—';
+  document.getElementById('progressStats').innerHTML=`
+    <div class="stat-card"><div class="val">${sessions.length}</div><div class="lbl">Sessies totaal</div></div>
+    <div class="stat-card"><div class="val">${sessions.filter(s=>s.passed).length}</div><div class="lbl">Geslaagd</div></div>
+    <div class="stat-card"><div class="val">${last}</div><div class="lbl">Laatste sessie</div></div>
+    <div class="stat-card"><div class="val">${verdict}</div><div class="lbl">Gereedheid</div></div>`;
+  const maxByC={adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
+  document.getElementById('criterionBars').innerHTML=sessions.length?CRITERIA.map(c=>{
+    const a=sessions.reduce((s,x)=>s+(x.criterionScores?.[c]||0),0)/sessions.length;
+    return`<div class="crit-bar-wrap"><div class="crit-bar-label"><span style="text-transform:capitalize">${c}</span><span>${a.toFixed(1)}/${maxByC[c]}</span></div><div class="crit-bar-bg"><div class="crit-bar-fill" style="width:${(a/maxByC[c])*100}%"></div></div></div>`;
+  }).join(''):'<p style="font-size:13px;color:var(--text-muted)">Nog geen sessiegegevens.</p>';
+  document.getElementById('historyBody').innerHTML=sessions.slice().reverse().map(s=>
+    `<tr><td>${s.date}</td><td style="text-transform:capitalize">${s.mode}</td><td style="font-family:var(--mono)">${s.totalScore}/${s.maxScore}</td><td><span class="${s.passed?'badge-pass':'badge-fail'}">${s.passed?'Geslaagd':'Niet geslaagd'}</span></td></tr>`
+  ).join('')||'<tr><td colspan="4" style="color:var(--text-muted);font-size:13px">Nog geen sessies.</td></tr>';
+}
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(currentUser.toLowerCase()+'_progress'))||{user:currentUser,sessions:[]}; }
+  catch(e) { return {user:currentUser,sessions:[]}; }
+}
+
+function saveProgress(data) {
+  localStorage.setItem(currentUser.toLowerCase()+'_progress',JSON.stringify(data));
+}
+
+function downloadProgress() {
+  const prog=loadProgress();
+  const sessions=prog.sessions;
+  const avg=avgScore(prog);
+  const verdict=avg>=115.2/192?'🟢 Klaar voor het examen / Ready':avg>=80/192?'🟡 Op weg / Approaching':'🔴 Nog niet klaar / Not yet ready';
+  const maxByC={adequaatheid:3,woordenschat:2,grammatica:2,vloeiendheid:2,coherentie:1,uitspraak:2};
+  const critRows=CRITERIA.map(c=>{
+    const a=sessions.length?sessions.reduce((s,x)=>s+(x.criterionScores?.[c]||0),0)/sessions.length:0;
+    return`| ${c} | ${a.toFixed(1)}/${maxByC[c]} | ${a/maxByC[c]>=0.6?'Sterk':'Aandachtspunt'} |`;
+  }).join('\n');
+  const sesRows=sessions.slice().reverse().map(s=>`| ${s.date} | ${s.mode} | ${s.totalScore}/${s.maxScore} | ${s.passed?'Ja':'Nee'} |`).join('\n');
+  const md=`# ${currentUser} — Spreken A2 Voortgang\n\n## Status\n- Datum: ${new Date().toISOString().split('T')[0]}\n- Gereedheid: ${verdict}\n- Sessies: ${sessions.length}\n\n## Gemiddelden per criterium\n| Criterium | Gemiddelde | Status |\n|---|---|---|\n${critRows}\n\n## Sessiegeschiedenis\n| Datum | Modus | Score | Geslaagd? |\n|---|---|---|---|\n${sesRows||'| — | — | — | — |'}\n`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([md],{type:'text/markdown'}));
+  a.download=`${currentUser}_progress.md`;
+  a.click();
+}
+
+// ── HEADER SCORE ──────────────────────────────────────
+function updateHeaderScore() {
+  const ans=answers.filter(Boolean);
+  if(!ans.length){document.getElementById('headerScore').style.display='none';return;}
+  const total=ans.reduce((s,a)=>s+a.total,0),max=ans.length*MAX_PER_Q;
+  document.getElementById('headerScore').textContent=`${total}/${max}`;
+  document.getElementById('headerScore').style.display='inline';
+}
+
+// ── HELPERS ───────────────────────────────────────────
+function setStatus(html,type) {
+  const b=document.getElementById('statusBox');
+  b.innerHTML=html;
+  b.className='status-box'+(type?' '+type:'');
+}
+
+function blobToBase64(blob) {
+  return new Promise((res,rej)=>{ const r=new FileReader(); r.onloadend=()=>res(r.result); r.onerror=rej; r.readAsDataURL(blob); });
+}
+
+async function callAnthropic(messages,maxTokens) {
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':currentApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-calls':'true'},
+    body:JSON.stringify({model:ANTHROPIC_MODEL,max_tokens:maxTokens,messages})
+  });
+  if(!r.ok){const e=await r.json();throw new Error(e.error?.message||r.status);}
+  return r.json();
+}
+
+function playBeep(freq,dur) {
+  try {
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator(),gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.frequency.value=freq;
+    gain.gain.setValueAtTime(0.3,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+dur);
+  } catch(e){}
+}
 </script>
+<!-- API KEY SETUP (first time per device) -->
+<div class="screen" id="screenApiSetup">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h2>API sleutel instellen</h2>
+      <p>Welkom, <strong id="apiSetupUser"></strong>! Dit is uw eerste keer op dit apparaat. Voer uw Anthropic API-sleutel in. Deze wordt versleuteld opgeslagen — u hoeft dit maar één keer te doen op dit apparaat.</p>
+      <div class="field">
+        <label>Anthropic API-sleutel</label>
+        <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" onkeydown="if(event.key==='Enter')saveApiKey()">
+      </div>
+      <div class="error-msg" id="apiSetupError" style="display:none;">Ongeldige sleutel. De sleutel moet beginnen met "sk-ant-".</div>
+      <button class="btn btn-primary" style="width:100%;" onclick="saveApiKey()">Sleutel opslaan en beginnen</button>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:12px;line-height:1.5;">Uw sleutel wordt versleuteld opgeslagen met uw wachtwoord als sleutel. Niemand anders kan deze lezen.</p>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
