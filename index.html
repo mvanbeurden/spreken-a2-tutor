@@ -952,7 +952,7 @@ function deleteRecording(){
   if(sc.type!=='question')return;
   const rs=recStates[sc.qIdx];
   if(playAudio){playAudio.pause();playAudio=null;}
-  rs.state='idle';rs.blob=null;rs.url=null;rs.duration=0;rs.elapsed=0;
+  rs.state='idle';rs.blob=null;rs.url=null;rs.duration=0;rs.elapsed=0;rs.transcript=null;
   hideDelConfirm();
   renderRecBar(sc.qIdx);
   updateOvGrid();
@@ -1192,8 +1192,6 @@ function updateHdrScore(){
 
 // ══════════ HELPERS ══════════
 function fmtTime(secs){const m=Math.floor(secs/60),s=secs%60;return`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
-
-function blobToBase64(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onloadend=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob);});}
 
 async function callAPI(msgs,maxTok){
   const r=await fetch('https://api.anthropic.com/v1/messages',{
