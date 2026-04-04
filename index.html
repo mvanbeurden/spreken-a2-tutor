@@ -92,7 +92,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .vid-ctrl-btn:hover{background:var(--bg);}
 
 /* Photos */
-.photos-wrap{display:flex;gap:10px;margin-bottom:14px;display:none;}
+.photos-wrap{gap:10px;margin-bottom:14px;display:none;}
 .photos-wrap img{flex:1;border-radius:6px;object-fit:cover;height:180px;border:1px solid var(--border);}
 .photos-wrap.single img{height:220px;}
 .photos-wrap.triple img{height:150px;}
@@ -453,7 +453,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 // ══════════ CONSTANTS ══════════
 const PW_HASH = 'c2ea025a511224ac6bd874503f496f9d5e431bc7d4ecc95faeab703a1294cb43';
 const UNSPLASH_KEY = '151IOPyzRgpP6fE6Gw678PShkGgEnhzRfWcVN-CGCzk';
-const MODEL = 'claude-sonnet-4-20250514';
+const MODEL = 'claude-sonnet-4-6';
 const Q_JSON = 'https://raw.githubusercontent.com/mvanbeurden/spreken-a2-tutor/main/videos/questions.json';
 const VID_BASE = 'https://raw.githubusercontent.com/mvanbeurden/spreken-a2-tutor/main/videos/';
 const CRITERIA = ['adequaatheid','woordenschat','grammatica','vloeiendheid','coherentie','uitspraak'];
@@ -475,6 +475,7 @@ let qData=[]; // question data per question index (0-15)
 let recStates=[]; // recording state per question {state,blob,url,duration,elapsed,transcript,scores,total}
 let bookmarks=new Set(); // screen indices
 let stream=null,recorder=null,chunks=[],recTimer=null,recElapsed=0;
+let recognition=null,transcriptParts=[];
 let playAudio=null;
 let examTimerSecs=0,examTimerInterval=null,timerVisible=false;
 let prevScreen='scrHome';
@@ -621,7 +622,8 @@ async function beginSession(mode){
   try{const r=await fetch(Q_JSON);vidQs=await r.json();}
   catch(e){vidQs=[{filename:'deel1_001.mp4',context:'Ik maak graag huiswerk op mijn slaapkamer.',question:'Waar maakt u graag huiswerk?',followup:'Vertel ook waarom.'}];}
   buildExamScreens();
-  recStates=new Array(16).fill(null).map(()=>({state:'idle',blob:null,url:null,duration:0,elapsed:0,transcript:null,scores:null,total:null}));
+  const qCount=examScreens.filter(s=>s.type==='question').length;
+  recStates=new Array(qCount).fill(null).map(()=>({state:'idle',blob:null,url:null,duration:0,elapsed:0,transcript:null,scores:null,total:null}));
   bookmarks=new Set();
   curScreenIdx=0;
   // Set timer: 35 min for full 16q, proportional otherwise
@@ -862,11 +864,25 @@ function startRec(qIdx){
   const rs=recStates[qIdx];
   if(rs.state!=='idle')return;
   chunks=[];
+  rs.transcript=null;
+  transcriptParts=[];
   playBeep(880,0.15);
   recorder=new MediaRecorder(stream);
   recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
   recorder.onstop=()=>onRecStop(qIdx);
   recorder.start();
+  // Start Dutch speech recognition in parallel for transcription
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){
+    recognition=new SR();
+    recognition.lang='nl-NL';
+    recognition.continuous=true;
+    recognition.interimResults=false;
+    recognition.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)transcriptParts.push(e.results[i][0].transcript);}};
+    recognition.onerror=()=>{};
+    recognition.onend=()=>{if(recognition)recognition.start();};// restart if browser auto-stops
+    try{recognition.start();}catch(e){}
+  }
   rs.state='recording';rs.elapsed=0;
   recElapsed=0;
   recTimer=setInterval(()=>{
@@ -885,6 +901,13 @@ function startRec(qIdx){
 function stopRec(qIdx){
   clearInterval(recTimer);recTimer=null;
   playBeep(440,0.25);
+  // Stop speech recognition and save transcript
+  if(recognition){
+    recognition.onend=null;// prevent auto-restart
+    try{recognition.stop();}catch(e){}
+    recognition=null;
+  }
+  recStates[qIdx].transcript=transcriptParts.join(' ').trim()||null;
   if(recorder&&recorder.state!=='inactive')recorder.stop();
 }
 
@@ -995,15 +1018,8 @@ async function submitAnswer(qIdx){
   if(rs.state!=='recorded')return;
   rs.state='scoring';
 
-  // Transcribe
-  try{
-    const b64=(await blobToBase64(rs.blob)).split(',')[1];
-    const tr=await callAPI([{role:'user',content:[
-      {type:'text',text:'Transcribe this Dutch audio recording accurately. Return ONLY the transcription, nothing else.'},
-      {type:'document',source:{type:'base64',media_type:'audio/webm',data:b64}}
-    ]}],500);
-    rs.transcript=tr.content?.[0]?.text?.trim()||'';
-  }catch(e){rs.transcript='[transcriptie mislukt]';}
+  // Transcript was captured live by SpeechRecognition during recording
+  if(!rs.transcript){rs.transcript='[geen transcriptie beschikbaar]';}
 
   // Score
   const sc=examScreens.find(s=>s.type==='question'&&s.qIdx===qIdx);
@@ -1203,6 +1219,7 @@ function playBeep(freq,dur){
 
 function stopRecCleanup(){
   clearInterval(recTimer);recTimer=null;
+  if(recognition){recognition.onend=null;try{recognition.stop();}catch(e){}recognition=null;}
   if(recorder&&recorder.state!=='inactive')recorder.stop();
   if(playAudio){playAudio.pause();playAudio=null;}
 }
