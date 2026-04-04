@@ -264,10 +264,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button class="user-btn" id="btnSuna" onclick="selUser('Suna')">Suna</button>
       </div>
       <div class="field"><label>Wachtwoord</label>
-        <input type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+        <input type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()" oninput="updateLoginBtn()">
       </div>
       <div class="err-msg" id="loginErr"></div>
-      <button class="btn btn-primary" style="width:100%" onclick="login()">Inloggen</button>
+      <button class="btn btn-primary" id="btnLogin" style="width:100%" onclick="login()" disabled>Inloggen</button>
     </div>
   </div>
 </div>
@@ -488,6 +488,11 @@ function selUser(n){
   cUser=n;
   document.getElementById('btnMarshall').classList.toggle('sel',n==='Marshall');
   document.getElementById('btnSuna').classList.toggle('sel',n==='Suna');
+  updateLoginBtn();
+}
+function updateLoginBtn(){
+  const hasPw=document.getElementById('pwInput').value.length>0;
+  document.getElementById('btnLogin').disabled=!(cUser&&hasPw);
 }
 
 async function login(){
